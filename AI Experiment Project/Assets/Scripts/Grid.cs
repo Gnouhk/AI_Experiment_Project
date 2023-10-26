@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
-{ 
+{
+    public bool displayGridGizmos;
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
@@ -13,13 +14,21 @@ public class Grid : MonoBehaviour
     float nodeDiameter;
     int gridSizeX, gridSizeY;
 
-    void Start()
+    void Awake()
     {
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
 
         CreateGrid();
+    }
+    
+    public int MaxSize
+    {
+        get
+        {
+            return gridSizeX * gridSizeY;
+        }
     }
 
     void CreateGrid()
@@ -79,26 +88,15 @@ public class Grid : MonoBehaviour
         return grid[x,y];
     }
 
-    public List<Node> path;
-
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
-        if(grid != null)
+        if (grid != null && displayGridGizmos)
         {
             foreach (Node n in grid)
             {
                 Gizmos.color = (n.walkable) ? Color.white : Color.red;
-                
-                if(path != null)
-                {
-                    if(path.Contains(n))
-                    {
-                        Gizmos.color = Color.black;
-                    }
-                }
-
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - .1f));
             }
         }
