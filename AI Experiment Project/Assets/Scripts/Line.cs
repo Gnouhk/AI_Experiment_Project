@@ -65,11 +65,12 @@ public struct Line
 		return Vector2.Distance(p, new Vector2(intersectX, intersectY));
 	}
 
-	public void DrawWithGizmos(float length)
+	/*public void DrawWithGizmos(float length)
 	{
 		Vector3 lineDir = new Vector3(1, 0, gradient).normalized;
 		Vector3 lineCentre = new Vector3(pointOnLine_1.x, 0, pointOnLine_1.y) + Vector3.up;
 		Gizmos.DrawLine(lineCentre - lineDir * length / 2f, lineCentre + lineDir * length / 2f);
 	}
+	*/
 
 }
