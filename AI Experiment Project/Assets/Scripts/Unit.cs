@@ -15,12 +15,19 @@ public class Unit : MonoBehaviour
 
 	Path path;
 
+	float timeUntilNextFootstep = -1f;
+
 	void Start()
 	{
 		StartCoroutine(UpdatePath());
 	}
 
-	public void OnPathFound(Vector3[] waypoints, bool pathSuccessful)
+    private void FixedUpdate()
+    {
+        UpdateFootstepAudio();
+    }
+
+    public void OnPathFound(Vector3[] waypoints, bool pathSuccessful)
 	{
 		if (pathSuccessful)
 		{
@@ -98,6 +105,15 @@ public class Unit : MonoBehaviour
 
 			yield return null;
 
+		}
+	}
+
+	void UpdateFootstepAudio()
+	{
+		//Update time for next footstep
+		if(timeUntilNextFootstep > 0)
+		{
+			//float footstepTimeScale = 1f + 
 		}
 	}
 

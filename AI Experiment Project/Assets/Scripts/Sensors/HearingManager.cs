@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum EHeardSoundCategory
 {
-
+    Footstep
 }
 
 public class HearingManager : MonoBehaviour
