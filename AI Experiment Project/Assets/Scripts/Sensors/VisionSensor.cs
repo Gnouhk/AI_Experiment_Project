@@ -36,6 +36,8 @@ public class VisionSensor : MonoBehaviour
                 continue;
             }
 
+            vectorToTarget.Normalize();
+
             //if outside of vision cone - enemy cannot see too.
             if(Vector3.Dot(vectorToTarget.normalized, linkedAI.EyeLocation) < linkedAI.CosVisionConeAngle)
             {
@@ -44,10 +46,13 @@ public class VisionSensor : MonoBehaviour
 
             //raycast
             RaycastHit hitResult;
-            if (Physics.Raycast(linkedAI.EyeLocation, linkedAI.EyeDirection, out hitResult, 
+            if (Physics.Raycast(linkedAI.EyeLocation, vectorToTarget, out hitResult, 
                                 linkedAI.VisionConeRange, detectionMask, QueryTriggerInteraction.Collide))
             {
-                linkedAI.ReportCanSee(candidateTarget);
+                if (hitResult.collider.GetComponentInParent<DetectableTarget>() == candidateTarget)
+                {
+                    linkedAI.ReportCanSee(candidateTarget);
+                }
             }
         }
     }

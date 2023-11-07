@@ -15,17 +15,10 @@ public class Unit : MonoBehaviour
 
 	Path path;
 
-	float timeUntilNextFootstep = -1f;
-
 	void Start()
 	{
 		StartCoroutine(UpdatePath());
 	}
-
-    private void FixedUpdate()
-    {
-        UpdateFootstepAudio();
-    }
 
     public void OnPathFound(Vector3[] waypoints, bool pathSuccessful)
 	{
@@ -103,17 +96,10 @@ public class Unit : MonoBehaviour
 				transform.Translate(Vector3.forward * Time.deltaTime * speed * speedPercent, Space.Self);
 			}
 
+			HearingManager.Instance.OnSoundEmited(transform.position, EHeardSoundCategory.Footstep, 0.1f);
+
 			yield return null;
 
-		}
-	}
-
-	void UpdateFootstepAudio()
-	{
-		//Update time for next footstep
-		if(timeUntilNextFootstep > 0)
-		{
-			//float footstepTimeScale = 1f + 
 		}
 	}
 
