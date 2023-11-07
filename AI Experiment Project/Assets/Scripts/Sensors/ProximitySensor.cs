@@ -2,17 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(EnemyAI))]
 public class ProximitySensor : MonoBehaviour
 {
-    // Start is called before the first frame update
+    EnemyAI LinkedAI;
+
     void Start()
     {
-        
+        LinkedAI = GetComponent<EnemyAI>(); 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        for (int index = 0; index < DetectableTargetManager.instance.allTargets.Count; index++)
+        {
+            var candidateTarget = DetectableTargetManager.instance.allTargets[index];
+
+            //skip if ourselves
+            if(candidateTarget.gameObject == gameObject)
+            {
+                continue;
+            }
+
+            if(Vector3.Distance(LinkedAI.EyeLocation, candidateTarget.transform.position) <= LinkedAI.ProximityDetectionRange)
+            {
+                LinkedAI.ReportProximity(candidateTarget);
+            }
+        }
     }
 }

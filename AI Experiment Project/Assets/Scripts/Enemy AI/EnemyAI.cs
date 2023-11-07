@@ -44,6 +44,11 @@ public class EnemyAI : MonoBehaviour
     {
         Debug.Log("Heard sound " + category + " at " + location.ToString() + " with intensity of " + intensity);
     }
+
+    public void ReportProximity(DetectableTarget target)
+    {
+        Debug.Log("Can sense " + target.gameObject.name);
+    }
 }
 
 [CustomEditor(typeof(EnemyAI))]
