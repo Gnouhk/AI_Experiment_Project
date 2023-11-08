@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[RequireComponent(typeof(AwarenessSystem))]
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] float _visionConeAngle = 60f;
@@ -30,24 +31,27 @@ public class EnemyAI : MonoBehaviour
 
     public float CosVisionConeAngle { get; private set; } = 0f;
 
+    AwarenessSystem Awareness;
+
     private void Awake()
     {
         CosVisionConeAngle = Mathf.Cos(VisionConeAngle * Mathf.Deg2Rad);
+        Awareness = GetComponent<AwarenessSystem>();
     }
 
     public void ReportCanSee(DetectableTarget seen)
     {
-        Debug.Log("Can see " + seen.gameObject.name);
+        Awareness.ReportCanSee(seen);
     }
 
-    public void ReportCanHear(Vector3 location, EHeardSoundCategory category, float intensity)
+    public void ReportCanHear(GameObject source, Vector3 location, EHeardSoundCategory category, float intensity)
     {
-        Debug.Log("Heard sound " + category + " at " + location.ToString() + " with intensity of " + intensity);
+        Awareness.ReportCanHear(gameObject, location, category, intensity);
     }
 
     public void ReportProximity(DetectableTarget target)
     {
-        Debug.Log("Can sense " + target.gameObject.name);
+        Awareness.ReportProximity(target);
     }
 }
 

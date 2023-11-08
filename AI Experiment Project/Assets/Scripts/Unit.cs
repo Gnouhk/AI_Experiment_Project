@@ -96,7 +96,7 @@ public class Unit : MonoBehaviour
 				transform.Translate(Vector3.forward * Time.deltaTime * speed * speedPercent, Space.Self);
 			}
 
-			HearingManager.Instance.OnSoundEmited(transform.position, EHeardSoundCategory.Footstep, 0.1f);
+			HearingManager.Instance.OnSoundEmited(gameObject, transform.position, EHeardSoundCategory.Footstep, 0.1f);
 
 			yield return null;
 

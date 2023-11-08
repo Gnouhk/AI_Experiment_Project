@@ -22,7 +22,7 @@ public class HearingSensor : MonoBehaviour
         }
     }
 
-    public void OnHeardSound(Vector3 location, EHeardSoundCategory category, float intensity)
+    public void OnHeardSound(GameObject source, Vector3 location, EHeardSoundCategory category, float intensity)
     {
         //outside hearing range
         if(Vector3.Distance(location, LinkedAI.EyeLocation) > LinkedAI.HearingRange)
@@ -30,6 +30,6 @@ public class HearingSensor : MonoBehaviour
             return;
         }
 
-        LinkedAI.ReportCanHear(location, category, intensity);
+        LinkedAI.ReportCanHear(source, location, category, intensity);
     }
 }

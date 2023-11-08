@@ -45,13 +45,13 @@ public class HearingManager : MonoBehaviour
         AllSensors.Remove(sensor);
     }
 
-    public void OnSoundEmited(Vector3 location, EHeardSoundCategory category, float intesify) 
+    public void OnSoundEmited(GameObject source, Vector3 location, EHeardSoundCategory category, float intesify) 
     {
 
         // notify sensor
         foreach (var sensor in AllSensors)
         {
-            sensor.OnHeardSound(location, category, intesify);
+            sensor.OnHeardSound(source, location, category, intesify);
         }
     }
 }
