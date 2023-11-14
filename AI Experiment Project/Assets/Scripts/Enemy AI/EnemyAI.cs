@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using TMPro.EditorUtilities;
 
 [RequireComponent(typeof(AwarenessSystem))]
 public class EnemyAI : MonoBehaviour
@@ -52,6 +53,36 @@ public class EnemyAI : MonoBehaviour
     public void ReportProximity(DetectableTarget target)
     {
         Awareness.ReportProximity(target);
+    }
+
+    public void OnSus()
+    {
+        Debug.Log("I hear you");
+    }
+
+    public void OnDetected(GameObject target)
+    {
+        Debug.Log("I see you " + target.gameObject.name);
+    }
+
+    public void OnFullyDetected(GameObject target)
+    {
+        Debug.Log("!!! " + target.gameObject.name);
+    }
+
+    public void OnLostDetect(GameObject target)
+    {
+        Debug.Log("Where are you " + target.gameObject.name);
+    }
+
+    public void OnLostSus()
+    {
+        Debug.Log("Where did you go?");
+    }
+
+    public void OnFullyLost()
+    {
+        Debug.Log("Must be nothing");
     }
 }
 

@@ -90,7 +90,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
 
-            HearingManager.Instance.OnSoundEmited(gameObject, transform.position, EHeardSoundCategory.Footstep, 0.1f);
+            HearingManager.Instance.OnSoundEmited(gameObject, transform.position, EHeardSoundCategory.Footstep, .2f);
         }
 
         //Sprint
