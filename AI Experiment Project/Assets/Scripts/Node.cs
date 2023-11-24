@@ -1,21 +1,26 @@
 using UnityEngine;
 using System.Collections;
 
+// Node class representing a node in a grid for pathfinding
 public class Node : IHeapItem<Node> 
 {
-	
-	public bool walkable;
-	public Vector3 worldPosition;
-	public int gridX;
-	public int gridY;
-	public int movementPenalty;
+	//Properties
+	public bool walkable;				// Whether the node is walkable
+	public Vector3 worldPosition;		// World position of the node
+	public int gridX;					// X coord 
+	public int gridY;					// Y coord 
+	public int movementPenalty;         // Penalty for traversing this node (terrain cost)
 
-	public int gCost;
-	public int hCost;
-	public Node parent;
-	int heapIndex;
-	
-	public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY, int _penalty) {
+	//Cost values for pathfinding
+    public int gCost;					// Cost from the start node to this node
+	public int hCost;					// Heuristic cost from this node to target node
+	public Node parent;                 // Parent node in the path
+
+    // Heap index for the node in the open set (used in pathfinding)
+    int heapIndex;
+
+    // Constructor to initialize a node
+    public Node(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY, int _penalty) {
 		walkable = _walkable;
 		worldPosition = _worldPos;
 		gridX = _gridX;
@@ -23,13 +28,15 @@ public class Node : IHeapItem<Node>
 		movementPenalty = _penalty;
 	}
 
-	public int fCost {
+    // F cost property (sum of gCost and hCost)
+    public int fCost {
 		get {
 			return gCost + hCost;
 		}
 	}
 
-	public int HeapIndex {
+    // HeapIndex property implementation from IHeapItem interface
+    public int HeapIndex {
 		get {
 			return heapIndex;
 		}
@@ -38,11 +45,17 @@ public class Node : IHeapItem<Node>
 		}
 	}
 
-	public int CompareTo(Node nodeToCompare) {
-		int compare = fCost.CompareTo(nodeToCompare.fCost);
-		if (compare == 0) {
+    // CompareTo method implementation from IHeapItem interface
+    public int CompareTo(Node nodeToCompare) {
+        // Compare nodes based on their total cost (fCost)
+        int compare = fCost.CompareTo(nodeToCompare.fCost);
+
+        // If fCost is equal, compare based on heuristic cost (hCost)
+        if (compare == 0) {
 			compare = hCost.CompareTo(nodeToCompare.hCost);
 		}
-		return -compare;
+
+        // Return the negation of the comparison result (min heap ordering)
+        return -compare;
 	}
 }

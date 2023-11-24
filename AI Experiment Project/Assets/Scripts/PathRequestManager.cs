@@ -6,25 +6,34 @@ using System.Threading;
 
 public class PathRequestManager : MonoBehaviour
 {
-	Queue<PathResult> results = new Queue<PathResult>();
+    // Queue to store pathfinding results
+    Queue<PathResult> results = new Queue<PathResult>();
 
-	static PathRequestManager instance;
+    // Static instance of PathRequestManager for easy access
+    static PathRequestManager instance;
 	Pathfinding pathfinding;
 
-	void Awake()
+    // Initialize the static instance and reference to Pathfinding
+    void Awake()
 	{
 		instance = this;
 		pathfinding = GetComponent<Pathfinding>();
 	}
 
+    // Update function to process pathfinding results
     private void Update()
     {
-        if(results.Count > 0)
+        // Check if there are results in the queue
+        if (results.Count > 0)
 		{
 			int itemsInQueue = results.Count;
-			lock (results)
+
+            // Lock the queue to avoid conflicts with multithreading
+            lock (results)
 			{
-				for(int i = 0; i < itemsInQueue; i++)
+
+                // Dequeue and process each result
+                for (int i = 0; i < itemsInQueue; i++)
 				{
 					PathResult result = results.Dequeue();
 					result.callback(result.path, result.success);
@@ -33,18 +42,24 @@ public class PathRequestManager : MonoBehaviour
 		}
     }
 
+    // Static function to request a path
     public static void RequestPath(PathRequest request)
 	{
-		ThreadStart threadStart = delegate
+        // Create a thread to run the pathfinding process
+        ThreadStart threadStart = delegate
 		{
 			instance.pathfinding.FindPath(request, instance.FinishedProcessingPath);
 		};
-		threadStart.Invoke();
+
+        // Invoke the thread
+        threadStart.Invoke();
 	}
 
-	public void FinishedProcessingPath(PathResult result)
+    // Callback function called when pathfinding is finished
+    public void FinishedProcessingPath(PathResult result)
 	{
-		lock(results)
+        // Lock the results queue and enqueue the result
+        lock (results)
 		{
 			results.Enqueue(result);
 		}
@@ -52,12 +67,15 @@ public class PathRequestManager : MonoBehaviour
 
 
 }
+
+// Struct to store pathfinding results
 	public struct PathResult
 	{
 		public Vector3[] path;
 		public bool success;
         public Action<Vector3[], bool> callback;
 
+		// Constructor for initializing PathResult
 		public PathResult(Vector3[] path, bool success, Action<Vector3[], bool> callback)
 		{
 			this.path = path;
@@ -66,12 +84,14 @@ public class PathRequestManager : MonoBehaviour
 		}
     }
 
+// Struct to represent a pathfinding request
 	public struct PathRequest
 	{
 		public Vector3 pathStart;
 		public Vector3 pathEnd;
 		public Action<Vector3[], bool> callback;
 
+		// Constructor for initializing PathRequest
 		public PathRequest(Vector3 _start, Vector3 _end, Action<Vector3[], bool> _callback)
 		{
 			pathStart = _start;
