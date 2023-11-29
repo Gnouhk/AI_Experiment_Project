@@ -29,21 +29,20 @@ public class VisionSensor : MonoBehaviour
             }
 
             var vectorToTarget = candidateTarget.transform.position - linkedAI.EyeLocation;
+            vectorToTarget.y = 0;
 
             //if outside of range - enemy cannot see
             if(vectorToTarget.sqrMagnitude > (linkedAI.VisionConeRange * linkedAI.VisionConeRange))
             {
                 continue;
             }
-
             vectorToTarget.Normalize();
 
             //if outside of vision cone - enemy cannot see too.
-            if(Vector3.Dot(vectorToTarget.normalized, linkedAI.EyeLocation) < linkedAI.CosVisionConeAngle)
+            if (Vector3.Dot(vectorToTarget.normalized, linkedAI.EyeLocation) < linkedAI.CosVisionConeAngle)
             {
                 continue;
             }
-
             //raycast
             RaycastHit hitResult;
             if (Physics.Raycast(linkedAI.EyeLocation, vectorToTarget, out hitResult, 
