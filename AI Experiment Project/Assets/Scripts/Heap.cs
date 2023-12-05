@@ -16,7 +16,7 @@ public class Heap<T> where T : IHeapItem<T>
         items = new T[maxHeapSize];
     }
 
-    // Add an item to the heap
+    // Add an item to the heap. It sets the item's HeapIndex, places it at the end of the array, restores the heap property by moving the item up the heap, and increments the item count.
     public void Add(T item)
     {
         // Set the heap index of the item to its current count
@@ -32,7 +32,7 @@ public class Heap<T> where T : IHeapItem<T>
         currentItemCount++;
     }
 
-    // Remove and return the highest priority item from the heap
+    // Remove and return the highest priority item from the heap. It swaps the first item with the last, updates the heap index of the last item, restores the heap property by moving the item down the heap, and returns the removed item.
     public T RemoveFirst()
     {
         // Get the first item (highest priority) in the heap
@@ -52,7 +52,7 @@ public class Heap<T> where T : IHeapItem<T>
         return firstItem;
     }
 
-    // Update the position of an item in the heap
+    // Update the position of an item in the heap by moving it up the heap to restore the heap property.
     public void UpdateItem(T item)
     {
         // Restore the heap property by moving the item up
@@ -149,7 +149,7 @@ public class Heap<T> where T : IHeapItem<T>
         }
     }
 
-    // Swap two items in the heap
+    // Swap two items in the heap updating their positions in the array and their HeapIndex properties.
     void Swap(T itemA, T itemB)
     {
         // Swap the items in the array

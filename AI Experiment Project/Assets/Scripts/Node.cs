@@ -55,7 +55,7 @@ public class Node : IHeapItem<Node>
 			compare = hCost.CompareTo(nodeToCompare.hCost);
 		}
 
-        // Return the negation of the comparison result (min heap ordering)
+        // Return the negation of the comparison result (min heap ordering) 
         return -compare;
 	}
 }

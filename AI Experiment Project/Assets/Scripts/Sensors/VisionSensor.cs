@@ -43,6 +43,7 @@ public class VisionSensor : MonoBehaviour
             {
                 continue;
             }
+
             //raycast
             RaycastHit hitResult;
             if (Physics.Raycast(linkedAI.EyeLocation, vectorToTarget, out hitResult, 
