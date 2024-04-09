@@ -1,6 +1,8 @@
 ﻿/*
  * This code is part of Arcade Car Physics for Unity by Saarg (2018)
  * 
+ * Modified by Vuong Anh. (Added input for neural network and mutation)
+ * 
  * This is distributed under the MIT Licence (see LICENSE.md for details)
  */
 

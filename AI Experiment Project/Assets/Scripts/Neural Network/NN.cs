@@ -3,7 +3,39 @@ using UnityEngine;
 public class NN : MonoBehaviour
 {
     public Layer[] layers;
-    public int[] networkShape = { 2, 4, 4, 2 };
+    public int[] networkShape = { 2, 4, 3, 2 };
+
+    public void Awake()
+    {
+        layers = new Layer[networkShape.Length - 1];
+        for (int i = 0; i < layers.Length; i++)
+        {
+            layers[i] = new Layer(networkShape[i], networkShape[i + 1]);
+        }
+    }
+
+    public float[] Brain(float[] inputs)
+    {
+        for (int i = 0; i < layers.Length; i++)
+        {
+            if (i == 0)
+            {
+                layers[i].Forward(inputs);
+                layers[i].Activation();
+            }
+            else if (i == layers.Length - 1)
+            {
+                layers[i].Forward(layers[i - 1].nodeArray);
+            }
+            else
+            {
+                layers[i].Forward(layers[i - 1].nodeArray);
+                layers[i].Activation();
+            }
+        }
+
+        return (layers[layers.Length - 1].nodeArray);
+    }
 
     public class Layer
     {
@@ -14,14 +46,14 @@ public class NN : MonoBehaviour
         private int n_nodes;
         private int n_inputs;
 
-        public Layer (int n_inputs, int n_nodes)
+        public Layer (int n_inputs, int n_neurons)
         {
-            this.n_nodes = n_nodes;
+            this.n_nodes = n_neurons;
             this.n_inputs = n_inputs;
 
-            weightsArray = new float [n_nodes, n_inputs];
-            biasesArray = new float [n_nodes];
-            nodeArray = new float [n_nodes];
+            weightsArray = new float [n_neurons, n_inputs];
+            biasesArray = new float [n_neurons];
+            nodeArray = new float [n_neurons];
         }
 
         public void Forward (float [] inputsArray)
@@ -41,6 +73,7 @@ public class NN : MonoBehaviour
             }
         }
 
+        // use ReLU method
         public void Activation()
         {
             for(int i = 0;i < n_nodes; i++)
@@ -53,35 +86,5 @@ public class NN : MonoBehaviour
         }
     }
 
-    public void Awake()
-    {
-        layers = new Layer[networkShape.Length - 1];
-        for(int i = 0; i < layers.Length; i++)
-        {
-            layers[i] = new Layer(networkShape[i], networkShape[i + 1]);
-        }
-    }
 
-    public float[] Brain(float [] inputs)
-    {
-        for(int i = 0; i < layers.Length; i++)
-        {
-            if(i == 0)
-            {
-                layers[i].Forward(inputs);
-                layers[i].Activation();
-            }
-            else if(i == layers.Length - 1)
-            {
-                layers[i].Forward(layers[i - 1].nodeArray);
-            }
-            else
-            {
-                layers[i].Forward(layers[i - 1].nodeArray);
-                layers[i].Activation();
-            }
-        }
-
-        return (layers[layers.Length - 1].nodeArray);
-    }
 }
