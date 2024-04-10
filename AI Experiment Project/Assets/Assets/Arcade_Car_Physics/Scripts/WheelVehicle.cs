@@ -14,10 +14,12 @@ using UnityEngine;
 #endif
 
 [assembly: InternalsVisibleTo("VehicleBehaviour.Dots")]
-namespace VehicleBehaviour {
+
+namespace VehicleBehaviour 
+{
     [RequireComponent(typeof(Rigidbody))]
-    public class WheelVehicle : MonoBehaviour {
-        
+    public class WheelVehicle : MonoBehaviour 
+    {
         [Header("Inputs")]
     #if MULTIOSCONTROLS
         [SerializeField] PlayerNumber playerId;
@@ -120,6 +122,7 @@ namespace VehicleBehaviour {
         // Reset Values
         Vector3 spawnPosition;
         Quaternion spawnRotation;
+        public bool isDead = false;
 
         /*
          *  The center of mass is set at the start and changes the car behavior A LOT
@@ -268,7 +271,8 @@ namespace VehicleBehaviour {
             speed = transform.InverseTransformDirection(rb.velocity).z * 3.6f;
 
             // Get all the inputs!
-            if (isPlayer) {
+            if (isPlayer) 
+            {
                 // Accelerate & brake
                 if (throttleInput != "" && throttleInput != null)
                 {
@@ -389,6 +393,13 @@ namespace VehicleBehaviour {
         {
             handbrake = h;
         }
+
+
+
+
+
+
+
 
         // MULTIOSCONTROLS is another package I'm working on ignore it I don't know if it will get a release.
 #if MULTIOSCONTROLS
