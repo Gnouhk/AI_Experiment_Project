@@ -23,7 +23,7 @@ public class NN : MonoBehaviour
     //feed input and return the output.
     public float[] Brain(float[] inputs)
     {
-        UnityEngine.Debug.Log("NN Input: " + string.Join(", ", inputs.Select(i => i.ToString()).ToArray()));
+        //UnityEngine.Debug.Log("NN Input: " + string.Join(", ", inputs.Select(i => i.ToString()).ToArray()));
 
         for (int i = 0; i < layers.Length; i++)
         {
