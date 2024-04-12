@@ -287,6 +287,18 @@ namespace VehicleBehaviour
                 // Jump
                 jumping = GetInput(jumpInput) != 0;
             }
+            else
+            {
+                foreach (WheelCollider wheel in turnWheel)
+                {
+                    wheel.steerAngle = Mathf.Lerp(wheel.steerAngle, Steering, steerSpeed);
+                }
+
+                foreach (WheelCollider wheel in driveWheel)
+                {
+                    wheel.motorTorque = Throttle * motorTorque.Evaluate(speed) * diffGearing / driveWheel.Length;
+                }
+            }
 
             // Direction
             foreach (WheelCollider wheel in turnWheel)

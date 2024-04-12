@@ -25,15 +25,17 @@ public class AgentMovement : MonoBehaviour
     public void Move(float FB, float LR)
     {
         LR = Mathf.Clamp(LR, -1, 1);
-        FB = Mathf.Clamp(FB, 0, 1);
+        FB = Mathf.Clamp(FB, -1, 1);
+
+        Debug.Log($"Moving car with Throttle: {FB}, Steering: {LR}");
 
         //move the gawddamn car
         if (!wheelVehicle.isDead)
         {
             //move forward, backward
-            
+            wheelVehicle.Steering = LR * wheelVehicle.SteerAngle;
+            wheelVehicle.Throttle = FB;
         }
-
     }
 
     public void Update()
@@ -93,6 +95,9 @@ public class AgentMovement : MonoBehaviour
         //store the outputs from the neural network in a variables
         FB = outputsFromNN[0];
         LR = outputsFromNN[1];
+
+        //move the car
+        Move(FB, LR);
     }
 
     private void OnTriggerEnter(Collider col)
@@ -108,7 +113,6 @@ public class AgentMovement : MonoBehaviour
     {
         // count down dead timer
         curentDeadTimer -= Time.deltaTime;
-        Debug.Log(curentDeadTimer);
 
         if(curentDeadTimer <= 0)
         {
