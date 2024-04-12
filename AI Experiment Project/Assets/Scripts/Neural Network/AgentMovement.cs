@@ -8,6 +8,9 @@ using VehicleBehaviour;
 public class AgentMovement : MonoBehaviour
 {
     public WheelVehicle wheelVehicle;
+    public GameObject carPrefab;
+    public Transform spawnPoint;
+
     public float deadTimer = 7;
     public float FB = 0;
     public float LR = 0;
@@ -111,6 +114,17 @@ public class AgentMovement : MonoBehaviour
         }
     }
 
+    public void RespawnCar()
+    {
+        GameObject newCar = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        AgentMovement newCarMovement = newCar.GetComponent<AgentMovement>();
+        if(newCarMovement != null)
+        {
+            newCarMovement.Initialize(carPrefab, spawnPoint);
+        }
+    }
+
     public void UpdateDeadTimer()
     {
         // count down dead timer
@@ -119,11 +133,18 @@ public class AgentMovement : MonoBehaviour
         if(curentDeadTimer <= 0)
         {
             Destroy(gameObject);
+            RespawnCar();
         }
     }
 
     public void ResetDeadTimer()
     {
         curentDeadTimer = deadTimer;
+    }
+
+    public void Initialize(GameObject prefab, Transform spawn)
+    {
+        carPrefab = prefab;
+        spawnPoint = spawn;
     }
 }

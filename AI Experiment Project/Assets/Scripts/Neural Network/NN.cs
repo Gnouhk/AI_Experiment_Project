@@ -44,7 +44,7 @@ public class NN : MonoBehaviour
         }
         float[] output = layers[layers.Length - 1].nodeArray;
 
-        UnityEngine.Debug.Log("NN Output: " + string.Join(", ", output.Select(o => o.ToString()).ToArray()));
+        //UnityEngine.Debug.Log("NN Output: " + string.Join(", ", output.Select(o => o.ToString()).ToArray()));
 
         return output;
     }
@@ -58,9 +58,8 @@ public class NN : MonoBehaviour
         {
             copiedLayer[i] = new Layer(networkShape[i], networkShape[i + 1]);
             System.Array.Copy (layers[i].weightsArray, copiedLayer[i].weightsArray, layers[i].weightsArray.GetLength(0) * layers[i].weightsArray.GetLength(1));
-            System.Array.Copy(layers[i].biasesArray, copiedLayer[i].biasesArray, layers[i].biasesArray.GetLength(0));
+            System.Array.Copy (layers[i].biasesArray, copiedLayer[i].biasesArray, layers[i].biasesArray.GetLength(0));
         }
-
         return (copiedLayer);
     }
 
@@ -96,7 +95,7 @@ public class NN : MonoBehaviour
         public void Forward (float [] inputsArray)
         {
             nodeArray = new float[n_neurons];
-            UnityEngine.Debug.Log("Forward function received inputs: " + string.Join(", ", inputsArray));
+            //UnityEngine.Debug.Log("Forward function received inputs: " + string.Join(", ", inputsArray));
 
             for (int i = 0; i < n_neurons; i++)
             {
@@ -111,20 +110,20 @@ public class NN : MonoBehaviour
                 nodeArray[i] += biasesArray[i];
             }
 
-            UnityEngine.Debug.Log("Output before activation: " + string.Join(", ", nodeArray));
+            //UnityEngine.Debug.Log("Output before activation: " + string.Join(", ", nodeArray));
         }
 
         // use ReLU method
         public void Activation()
         {
-            UnityEngine.Debug.Log("Activation function received inputs: " + string.Join(", ", nodeArray));
+            //UnityEngine.Debug.Log("Activation function received inputs: " + string.Join(", ", nodeArray));
 
             for (int i = 0;i < n_neurons; i++)
             {
                 nodeArray[i] = Mathf.Max(0, nodeArray[i]);
             }
 
-            UnityEngine.Debug.Log("Output after activation: " + string.Join(", ", nodeArray));
+            //UnityEngine.Debug.Log("Output after activation: " + string.Join(", ", nodeArray));
         }
     }
 }
