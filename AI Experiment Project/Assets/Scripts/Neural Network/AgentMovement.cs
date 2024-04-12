@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using VehicleBehaviour;
@@ -27,7 +28,7 @@ public class AgentMovement : MonoBehaviour
         LR = Mathf.Clamp(LR, -1, 1);
         FB = Mathf.Clamp(FB, -1, 1);
 
-        Debug.Log($"Moving car with Throttle: {FB}, Steering: {LR}");
+        UnityEngine.Debug.Log($"Moving car with Throttle: {FB}, Steering: {LR}");
 
         //move the gawddamn car
         if (!wheelVehicle.isDead)
@@ -63,13 +64,13 @@ public class AgentMovement : MonoBehaviour
             if(Physics.Raycast(rayStart, rayDirection, out hit, viewDistance))
             {
                 //draw raycast
-                Debug.DrawRay(rayStart, rayDirection * hit.distance, Color.blue);
+                UnityEngine.Debug.DrawRay(rayStart, rayDirection * hit.distance, Color.blue);
 
                 if (hit.transform.gameObject.tag == "Wall")
                 {
                     //use the length of the raycast as the distance to the wall
                     distance[i] = hit.distance / viewDistance;
-                    Debug.Log("Raycast hit Wall");
+                    UnityEngine.Debug.Log("Raycast hit Wall");
                 }
                 else
                 {
@@ -80,7 +81,7 @@ public class AgentMovement : MonoBehaviour
             else
             {
                 //draw raycast
-                Debug.DrawRay(rayStart, rayDirection * viewDistance, Color.blue);
+                UnityEngine.Debug.DrawRay(rayStart, rayDirection * viewDistance, Color.blue);
 
                 distance[i] = 1;
             }
@@ -91,6 +92,7 @@ public class AgentMovement : MonoBehaviour
 
         //setup outputs from the neural network
         float [] outputsFromNN = neuralNetwork.Brain(inputsToNN);
+        UnityEngine.Debug.Log($"NN Output Throttle: {outputsFromNN[0]}, Steering: {outputsFromNN[1]}");
 
         //store the outputs from the neural network in a variables
         FB = outputsFromNN[0];
