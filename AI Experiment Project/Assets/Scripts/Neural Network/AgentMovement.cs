@@ -12,34 +12,27 @@ public class AgentMovement : MonoBehaviour
     public Transform spawnPoint;
 
     public float deadTimer = 7;
-    public float FB = 0;
-    public float LR = 0;
-    public float viewDistance = 20;
+    public float viewDistance = 50f;
     public NN neuralNetwork;
-    public float[] distance = new float[6];
 
     public float curentDeadTimer;
+
+    //number of raycasts and spread angle
+    int numRaycasts = 5;
+    float angleBetweenRaycasts = 30f;
+
+    //define other state components
+    public float currentCarSpeed;
+    public Vector3 relativeCheckpointPosition; //position of the next checkpoint
+    public List<Transform> checkpoints;
+    private int currentCheckpointIndex = 0;
+    
+
 
     private void Awake()
     {
         wheelVehicle = GetComponent<WheelVehicle>();
         ResetDeadTimer();
-    }
-
-    public void Move(float FB, float LR)
-    {
-        LR = Mathf.Clamp(LR, -1, 1);
-        FB = Mathf.Clamp(FB, -1, 1);
-
-        UnityEngine.Debug.Log($"Moving car with Throttle: {FB}, Steering: {LR}");
-
-        //move the gawddamn car
-        if (!wheelVehicle.isDead)
-        {
-            //move forward, backward
-            wheelVehicle.Steering = LR * wheelVehicle.SteerAngle;
-            wheelVehicle.Throttle = FB;
-        }
     }
 
     public void Update()
@@ -49,68 +42,93 @@ public class AgentMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
-        int numRaycasts = 5;
-        float angleBetweenRaycasts = 30;
+        float[] currentState = GetState();
 
+        //use currentState as input for the neural network
+        //and use the output to control the car
+        //placeholder to represent getting the output from the neural network
+        float[] nnOutput = new float[2];
+
+        //move the car
+        ApplyActions(nnOutput);
+    }
+    
+    //function to collect state info
+    public float[] GetState()
+    {
+        List<float> state = new List<float>();
+
+        //raycasts
         RaycastHit hit;
-
-        for(int i = 0; i < numRaycasts; i++)
+        for (int i = 0; i < numRaycasts; i++)
         {
             float angle = ((2 * i + 1 - numRaycasts) * angleBetweenRaycasts / 2);
-            
-            //rotate the direction of the raycast by y - axis of the car
-            Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.up);
-            Vector3 rayDirection = rotation * transform.forward * 1;
+            Quaternion rotation = Quaternion.AngleAxis(angle, transform.up);
+            Vector3 rayDirection = rotation * transform.forward;
 
             Vector3 rayStart = transform.position + Vector3.up * 0.5f;
 
-            if(Physics.Raycast(rayStart, rayDirection, out hit, viewDistance))
+            if (Physics.Raycast(rayStart, rayDirection, out hit, viewDistance))
             {
                 //draw raycast
                 UnityEngine.Debug.DrawRay(rayStart, rayDirection * hit.distance, Color.blue);
 
-                if (hit.transform.gameObject.tag == "Wall")
-                {
-                    //use the length of the raycast as the distance to the wall
-                    distance[i] = hit.distance / viewDistance;
-                    UnityEngine.Debug.Log("Raycast hit Wall");
-                }
-                else
-                {
-                    //if no wall is detected, set the distance to the maximum length of the raycast
-                    distance[i] = 1;
-                }
+                //normalize the distance and add to state
+                state.Add(hit.distance / viewDistance);
             }
             else
             {
                 //draw raycast
-                UnityEngine.Debug.DrawRay(rayStart, rayDirection * viewDistance, Color.blue);
+                UnityEngine.Debug.DrawRay(rayStart, rayDirection * hit.distance, Color.blue);
 
-                distance[i] = 1;
+                //if nothing is hit, add maximum distance
+                state.Add(1f);
             }
         }
 
-        //setup inputs for the neural network
-        float [] inputsToNN = distance;
+        //Dunno what is the maximum speed of the car, but assuming 100 is the top speed.
+        float normalizedSpeed = currentCarSpeed / 100f;
+        state.Add(normalizedSpeed);
 
-        //setup outputs from the neural network
-        float [] outputsFromNN = neuralNetwork.Brain(inputsToNN);
-        UnityEngine.Debug.Log($"NN Output Throttle: {outputsFromNN[0]}, Steering: {outputsFromNN[1]}");
+        //Add normalized relative checkpoint position
+        Vector3 normalizedCheckpointPosition = relativeCheckpointPosition / 100f;
+        state.Add(normalizedCheckpointPosition.x);
+        state.Add(normalizedCheckpointPosition.y);
+        state.Add(normalizedCheckpointPosition.z);
 
-        //store the outputs from the neural network in a variables
-        FB = outputsFromNN[0];
-        LR = outputsFromNN[1];
-
-        //move the car
-        Move(FB, LR);
+        return state.ToArray();
     }
 
-    private void OnTriggerEnter(Collider col)
+    public void ApplyActions(float[] neuralNetworkOutput)
+    {
+        // clamp the values in case the outpud values outside the -1 and 1 range.
+        float steering = Mathf.Clamp(neuralNetworkOutput[0], -1f, 1f);
+        float throttle = Mathf.Clamp(neuralNetworkOutput[1], -1f, 1f);
+
+        //apply actions to the car
+
+        //move
+        wheelVehicle.Steering = steering * wheelVehicle.SteerAngle;
+        wheelVehicle.Throttle = throttle;
+
+        UnityEngine.Debug.Log($"Moving car with Throttle: {throttle}, Steering: {steering}");
+
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         //if the agent collides with a checkpoint, renew the dead timer.
-        if(col.gameObject.tag == "Checkpoint")
+        if(other.CompareTag("Checkpoint"))
         {
-            ResetDeadTimer();
+            //check if the checkpoint is the next one we're expecting
+            if(checkpoints[currentCheckpointIndex] == other.transform)
+            {
+                //update the checkpoint index to the next one
+                currentCheckpointIndex = (currentCheckpointIndex + 1) % checkpoints.Count;
+
+                //reset the dead timer.
+                ResetDeadTimer();
+            }
         }
     }
 

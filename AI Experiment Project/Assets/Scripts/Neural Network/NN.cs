@@ -6,7 +6,7 @@ using UnityEngine;
 public class NN : MonoBehaviour
 {
     public Layer[] layers;
-    public int[] networkShape = { 2, 4, 3, 2 };
+    public int[] networkShape = { 4, 32, 2};
 
     public void Awake()
     {
