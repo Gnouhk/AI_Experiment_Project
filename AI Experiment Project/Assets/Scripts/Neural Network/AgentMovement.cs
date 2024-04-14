@@ -42,6 +42,13 @@ public class AgentMovement : MonoBehaviour
 
     public void FixedUpdate()
     {
+        //update the relative position of the next checkpoint
+        if(currentCheckpointIndex < checkpoints.Count)
+        {
+            Transform nextCheckpoint = checkpoints[currentCheckpointIndex];
+            relativeCheckpointPosition = nextCheckpoint.position - transform.position;
+        }
+
         float[] currentState = GetState();
 
         //use currentState as input for the neural network
@@ -99,11 +106,11 @@ public class AgentMovement : MonoBehaviour
         return state.ToArray();
     }
 
-    public void ApplyActions(float[] neuralNetworkOutput)
+    public void ApplyActions(float[] nnOutput)
     {
         // clamp the values in case the outpud values outside the -1 and 1 range.
-        float steering = Mathf.Clamp(neuralNetworkOutput[0], -1f, 1f);
-        float throttle = Mathf.Clamp(neuralNetworkOutput[1], -1f, 1f);
+        float steering = Mathf.Clamp(nnOutput[0], -1f, 1f);
+        float throttle = Mathf.Clamp(nnOutput[1], -1f, 1f);
 
         //apply actions to the car
 
