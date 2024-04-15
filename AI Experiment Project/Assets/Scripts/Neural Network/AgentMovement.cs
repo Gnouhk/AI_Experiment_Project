@@ -123,16 +123,20 @@ public class AgentMovement : MonoBehaviour
     public void ApplyActions(float[] nnOutput)
     {
         // clamp the values in case the outpud values outside the -1 and 1 range.
-        float steering = Mathf.Clamp(nnOutput[0], -1f, 1f);
-        float throttle = Mathf.Clamp(nnOutput[1], -1f, 1f);
+        float steeringOutput = Mathf.Clamp(nnOutput[0], -1f, 1f);
+        float throttleOutput = Mathf.Clamp(nnOutput[1], -1f, 1f);
 
+        //map the max steering angle to 30
+        float maxSteeringAngle = 30f;
+        float steeringAngle = steeringOutput * maxSteeringAngle;
+        
         //apply actions to the car
         //move
-        wheelVehicle.Steering = steering * wheelVehicle.SteerAngle;
-        wheelVehicle.Throttle = throttle;
+        wheelVehicle.Steering = steeringAngle;
+        wheelVehicle.Throttle = throttleOutput;
 
-        UnityEngine.Debug.Log($"Moving car with Throttle: {throttle}, Steering: {steering}");
-
+        // Debug to check the applied values
+        UnityEngine.Debug.Log($"Applied Steering: {steeringAngle}, Applied Throttle: {throttleOutput}");
     }
 
     public float CalculatedReward()
