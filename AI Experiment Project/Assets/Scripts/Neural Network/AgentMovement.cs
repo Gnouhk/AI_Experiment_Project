@@ -25,8 +25,10 @@ public class AgentMovement : MonoBehaviour
     public float currentCarSpeed;
     public Vector3 relativeCheckpointPosition; //position of the next checkpoint
     public List<Transform> checkpoints;
-    private int currentCheckpointIndex = 0;
-    
+    public int currentCheckpointIndex = 0;
+    public float lastDistanceToCheckpoint;
+    private bool justPassedCheckpoint = false;
+    private bool hitObstacle = false;
 
 
     private void Awake()
@@ -35,14 +37,23 @@ public class AgentMovement : MonoBehaviour
         ResetDeadTimer();
     }
 
+    private void Start()
+    {
+        if (checkpoints.Count > 0)
+        {
+            lastDistanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[currentCheckpointIndex].position);
+        }
+    }
+
     public void Update()
     {
         UpdateDeadTimer();
+        hitObstacle = false;
     }
 
     public void FixedUpdate()
     {
-        //update the relative position of the next checkpoint
+        //update the relative position of the Snext checkpoint
         if(currentCheckpointIndex < checkpoints.Count)
         {
             Transform nextCheckpoint = checkpoints[currentCheckpointIndex];
@@ -54,10 +65,13 @@ public class AgentMovement : MonoBehaviour
         //use currentState as input for the neural network
         //and use the output to control the car
         //placeholder to represent getting the output from the neural network
-        float[] nnOutput = new float[2];
+        float[] nnOutput = neuralNetwork.Brain(currentState);
 
         //move the car
         ApplyActions(nnOutput);
+
+        //update the reward
+        CalculatedReward();
     }
     
     //function to collect state info
@@ -113,13 +127,47 @@ public class AgentMovement : MonoBehaviour
         float throttle = Mathf.Clamp(nnOutput[1], -1f, 1f);
 
         //apply actions to the car
-
         //move
         wheelVehicle.Steering = steering * wheelVehicle.SteerAngle;
         wheelVehicle.Throttle = throttle;
 
         UnityEngine.Debug.Log($"Moving car with Throttle: {throttle}, Steering: {steering}");
 
+    }
+
+    public float CalculatedReward()
+    {
+        float reward = 0f;
+
+        //calculated the reward
+        float currentDistanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[currentCheckpointIndex].position);
+        float progress = lastDistanceToCheckpoint - currentDistanceToCheckpoint;
+
+        //reward progress towards the checkpoint
+        if(progress > 0)
+        {
+            reward += progress;
+        }
+
+        //update last distance for the next calculation
+        lastDistanceToCheckpoint = currentDistanceToCheckpoint;
+
+        //checkpoint passed reward
+        if (JustPassedCheckpoint())
+        {
+            reward += 100f;
+        }
+
+        //time penalty
+        reward -= 0.1f;
+
+        //collision penalty
+        if (HitObstacles())
+        {
+            reward -= 50f;
+        }
+
+        return reward;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -132,11 +180,42 @@ public class AgentMovement : MonoBehaviour
             {
                 //update the checkpoint index to the next one
                 currentCheckpointIndex = (currentCheckpointIndex + 1) % checkpoints.Count;
+                justPassedCheckpoint = true;
 
                 //reset the dead timer.
                 ResetDeadTimer();
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Obstacles"))
+        {
+            hitObstacle = true;
+        }
+    }
+
+    public bool JustPassedCheckpoint()
+    {
+        if(justPassedCheckpoint)
+        {
+            //reset the flag before returning true
+            justPassedCheckpoint = false;
+            return true;
+        }
+        return false;
+    }
+
+    public bool HitObstacles()
+    {
+        //reports whether the car hit an obstacles then reset the flag
+        if(hitObstacle)
+        {
+            hitObstacle = false;
+            return true;
+        }
+        return false;
     }
 
     public void RespawnCar()
