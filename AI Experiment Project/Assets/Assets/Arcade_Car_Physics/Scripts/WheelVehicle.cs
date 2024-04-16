@@ -291,7 +291,8 @@ namespace VehicleBehaviour
             {
                 foreach (WheelCollider wheel in turnWheel)
                 {
-                    wheel.steerAngle = Mathf.Lerp(wheel.steerAngle, Steering, steerSpeed);
+                    //wheel.steerAngle = Mathf.Lerp(wheel.steerAngle, Steering, steerSpeed);
+                    wheel.steerAngle = Steering * steerAngle;
                 }
 
                 foreach (WheelCollider wheel in driveWheel)

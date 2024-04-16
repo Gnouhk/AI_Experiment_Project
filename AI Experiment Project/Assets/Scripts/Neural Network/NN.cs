@@ -6,7 +6,7 @@ using UnityEngine;
 public class NN : MonoBehaviour
 {
     public Layer[] layers;
-    public int[] networkShape = { 4, 32, 2};
+    public int[] networkShape = {4, 32, 2};
 
     public void Awake()
     {
@@ -23,8 +23,6 @@ public class NN : MonoBehaviour
     //feed input and return the output.
     public float[] Brain(float[] inputs)
     {
-        //UnityEngine.Debug.Log("NN Input: " + string.Join(", ", inputs.Select(i => i.ToString()).ToArray()));
-
         for (int i = 0; i < layers.Length; i++)
         {
             if (i == 0)
@@ -44,12 +42,88 @@ public class NN : MonoBehaviour
         }
         float[] output = layers[layers.Length - 1].nodeArray;
 
-        //UnityEngine.Debug.Log("NN Output: " + string.Join(", ", output.Select(o => o.ToString()).ToArray()));
-
         return output;
     }
 
-    //copy the weights and biases from one network to another
+    //placeholder function where implement backpropagation 
+    public void Train(float[] inputs, float[] expectedOutputs, float learningRate)
+    {
+        // TODO: Implement the forward pass to get the predictions
+        float[] predictions = Brain(inputs);
+
+        // TODO: Implement the calculation of the loss gradient
+        float[] lossGradients = CalculateLossGradient(predictions, expectedOutputs);
+
+        // TODO: Implement the backpropagation to get the gradients for weights and biases
+        Backpropagate(lossGradients);
+
+        //update weights and biases in all layers.
+        UpdateWeights(learningRate);
+    }
+
+    private void Backpropagate(float[] lossGradients)
+    {
+        //starting from the output layer and moving back towards the input layer
+        for (int i = layers.Length - 1; i >= 0; i--)
+        {
+            //for each neuron in the layer
+            for(int j = 0; j < layers[i].n_neurons; j++)
+            {
+                //if it's the output layer
+                if(i == layers.Length - 1)
+                {
+                    //the gradient is the derivative of the loss functionhttps://127.0.0.1:50230/lol-game-data/assets/ASSETS/Regalia/BannerSkins/wa2023.png
+                    layers[i].deltaArray[j] = lossGradients[j];
+                }
+                else
+                {
+                    //for hidden layers, sum up all the contributions from the neurons in the next layer
+                    float sum = 0;
+
+                    for(int k = 0; k < layers[i + 1].n_neurons; k++)
+                    {
+                        sum += layers[i + 1].weightsArray[k, j] * layers[i + 1].deltaArray[k];
+                    }
+
+                    //multiply by the derivative of the activation function
+                    layers[i].deltaArray[j] = sum * DerivativeOfActivationFunction(layers[i].nodeArray[j]);
+                }
+            }
+        }
+    }
+
+    private void UpdateWeights(float learningRate)
+    {
+        //loop through each layer
+        for(int i = 0; i < layers.Length;i++)
+        {
+            //update weight and bias in the layer based on the stored gradients
+            //
+        }
+    }
+
+    private float CalculateGradient(int layerIndex, int neuronIndex, int weightIndex)
+    {
+        float delta = layers[layerIndex].deltaArray[neuronIndex];
+
+        float input = layerIndex == 0 ? inputs[weightIndex] : layers[layerIndex - 1].nodeArray[weightIndex];
+
+        return input * delta;
+    }
+
+    private float[] CalculateLossGradient(float[] predictions, float[] expectedOutputs)
+    {
+
+
+        return new float[predictions.Length];
+    }
+
+    private float DerivativeOfActivationFunction(float output)
+    {
+        return output > 0 ? 1f : 0f;
+    }
+
+    /* copy the weights and biases from one network to another
     public Layer[] copyLayers()
     {
         Layer[] copiedLayer = new Layer[networkShape.Length];
@@ -62,15 +136,17 @@ public class NN : MonoBehaviour
         }
         return (copiedLayer);
     }
+    */
 
     public class Layer
     {
         public float[,] weightsArray;
         public float[] biasesArray;
         public float[] nodeArray;
+        public float[] deltaArray;
 
-        private int n_neurons;
-        private int n_inputs;
+        public int n_neurons;
+        public int n_inputs;
 
         public Layer(int n_inputs, int n_neurons)
         {
@@ -95,7 +171,6 @@ public class NN : MonoBehaviour
         public void Forward (float [] inputsArray)
         {
             nodeArray = new float[n_neurons];
-            //UnityEngine.Debug.Log("Forward function received inputs: " + string.Join(", ", inputsArray));
 
             for (int i = 0; i < n_neurons; i++)
             {
@@ -109,21 +184,15 @@ public class NN : MonoBehaviour
                 //add the bias
                 nodeArray[i] += biasesArray[i];
             }
-
-            //UnityEngine.Debug.Log("Output before activation: " + string.Join(", ", nodeArray));
         }
 
         // use ReLU method
         public void Activation()
         {
-            //UnityEngine.Debug.Log("Activation function received inputs: " + string.Join(", ", nodeArray));
-
             for (int i = 0;i < n_neurons; i++)
             {
                 nodeArray[i] = Mathf.Max(0, nodeArray[i]);
             }
-
-            //UnityEngine.Debug.Log("Output after activation: " + string.Join(", ", nodeArray));
         }
     }
 }

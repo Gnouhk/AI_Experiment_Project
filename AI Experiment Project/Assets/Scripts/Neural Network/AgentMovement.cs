@@ -7,14 +7,14 @@ using VehicleBehaviour;
 
 public class AgentMovement : MonoBehaviour
 {
+    //script references
     public WheelVehicle wheelVehicle;
     public GameObject carPrefab;
     public Transform spawnPoint;
+    public NN neuralNetwork;
 
     public float deadTimer = 7;
     public float viewDistance = 50f;
-    public NN neuralNetwork;
-
     public float curentDeadTimer;
 
     //number of raycasts and spread angle
@@ -23,13 +23,14 @@ public class AgentMovement : MonoBehaviour
 
     //define other state components
     public float currentCarSpeed;
-    public Vector3 relativeCheckpointPosition; //position of the next checkpoint
+    private bool hitObstacle = false;
+
+    //checkpoints variable
     public List<Transform> checkpoints;
     public int currentCheckpointIndex = 0;
     public float lastDistanceToCheckpoint;
     private bool justPassedCheckpoint = false;
-    private bool hitObstacle = false;
-
+    public Vector3 relativeCheckpointPosition; //position of the next checkpoint
 
     private void Awake()
     {
