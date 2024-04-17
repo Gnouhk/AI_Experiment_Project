@@ -23,6 +23,7 @@ public class NN : MonoBehaviour
     //feed input and return the output.
     public float[] Brain(float[] inputs)
     {
+        UnityEngine.Debug.Log($"Running forward pass with inputs: {string.Join(", ", inputs)}");
         for (int i = 0; i < layers.Length; i++)
         {
             if (i == 0)
@@ -42,12 +43,15 @@ public class NN : MonoBehaviour
         }
         float[] output = layers[layers.Length - 1].nodeArray;
 
+        UnityEngine.Debug.Log($"Output from forward pass: {string.Join(", ", output)}");
         return output;
     }
 
     //placeholder function where implement backpropagation 
     public void Train(float[] inputs, float[] expectedOutputs, float learningRate)
     {
+        UnityEngine.Debug.Log($"Starting training with inputs: {string.Join(", ", inputs)} and expected outputs: {string.Join(", ", expectedOutputs)}");
+
         // TODO: Implement the forward pass to get the predictions
         float[] predictions = Brain(inputs);
 
@@ -58,11 +62,12 @@ public class NN : MonoBehaviour
         Backpropagate(lossGradients);
 
         //update weights and biases in all layers.
-        UpdateWeights(learningRate);
+        UpdateWeights(inputs, learningRate);
     }
 
     private void Backpropagate(float[] lossGradients)
     {
+        UnityEngine.Debug.Log($"Running backpropagation with loss gradients: {string.Join(", ", lossGradients)}");
         //starting from the output layer and moving back towards the input layer
         for (int i = layers.Length - 1; i >= 0; i--)
         {
@@ -92,30 +97,71 @@ public class NN : MonoBehaviour
         }
     }
 
-    private void UpdateWeights(float learningRate)
+    private void UpdateWeights(float[] inputs, float learningRate)
     {
+        UnityEngine.Debug.Log($"Updating weights and biases with learning rate: {learningRate}");
         //loop through each layer
-        for(int i = 0; i < layers.Length;i++)
+        for (int i = 0; i < layers.Length;i++)
         {
-            //update weight and bias in the layer based on the stored gradients
-            //
+            UnityEngine.Debug.Log($"Layer {i} weights after update: {string.Join(", ", layers[i].weightsArray.Cast<float>())}");
+            UnityEngine.Debug.Log($"Layer {i} biases after update: {string.Join(", ", layers[i].biasesArray)}");
+
+            float[] layerInputs = i == 0 ? inputs : layers[i - 1].nodeArray;
+
+            for(int neuronIndex = 0; neuronIndex < layers[i].n_neurons; neuronIndex++)
+            {
+                for(int weightIndex = 0; weightIndex < layers[i].n_inputs; weightIndex++)
+                {
+                    //calculate the gradient for the current weight
+                    float gradient = CalculateGradient(layerInputs, i, neuronIndex, weightIndex);
+
+                    //update the weight with the gradient
+                    //the learning rate is negative since, this is gradient descend
+                    layers[i].weightsArray[neuronIndex,weightIndex] -= learningRate * gradient;
+                }
+
+                //update biases, using delta values
+                layers[i].biasesArray[neuronIndex] -= learningRate * layers[i].deltaArray[neuronIndex];
+            }
         }
     }
 
-    private float CalculateGradient(int layerIndex, int neuronIndex, int weightIndex)
+    private float CalculateGradient(float[] inputs, int layerIndex, int neuronIndex, int weightIndex)
     {
         float delta = layers[layerIndex].deltaArray[neuronIndex];
 
-        float input = layerIndex == 0 ? inputs[weightIndex] : layers[layerIndex - 1].nodeArray[weightIndex];
+        float input;
+        if(layerIndex == 0)
+        {
+            //for the first layer, the inputs are the network's inputs
+            input = inputs[weightIndex];
+        }
+        else
+        {
+            //for subsequent layers. the inputs are the outputs of the previous layer's neuros
+            input = layers[layerIndex - 1].nodeArray[weightIndex];
+        }
 
-        return input * delta;
+        return delta * input;
     }
 
     private float[] CalculateLossGradient(float[] predictions, float[] expectedOutputs)
     {
+        UnityEngine.Debug.Log($"Calculating loss gradients. Predictions: {string.Join(", ", predictions)}, Expected: {string.Join(", ", expectedOutputs)}");
+        if (predictions.Length != expectedOutputs.Length)
+        {
+            throw new ArgumentException("The predictions and expectedOutputs arrays must be of the same length.");
+        }
 
+        float[] lossGradients = new float[predictions.Length];
+        
+        for(int i = 0; i < predictions.Length; i++)
+        {
+            lossGradients[i] = 2 * (predictions[i] - expectedOutputs[i]);
+        }
 
-        return new float[predictions.Length];
+        UnityEngine.Debug.Log($"Loss Gradients: {string.Join(", ", lossGradients)}");
+        return lossGradients;
     }
 
     private float DerivativeOfActivationFunction(float output)

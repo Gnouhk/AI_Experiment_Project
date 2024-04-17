@@ -24,6 +24,8 @@ public class AgentMovement : MonoBehaviour
     //define other state components
     public float currentCarSpeed;
     private bool hitObstacle = false;
+    public float learningRate = 0.01f;
+    public bool isBeingDestroyed = false;
 
     //checkpoints variable
     public List<Transform> checkpoints;
@@ -73,6 +75,26 @@ public class AgentMovement : MonoBehaviour
 
         //update the reward
         CalculatedReward();
+    }
+
+    public void TrainAgent()
+    {
+        if(isBeingDestroyed)
+        {
+            UnityEngine.Debug.Log("Attempted to train during destruction process, skipping.");
+            return; 
+        }
+
+        //get state, action, and reward
+        float[] state = GetState();
+        float[] action = neuralNetwork.Brain(state);
+        float reward = CalculatedReward();
+
+        // define the target output based on the reward
+        float[] targetOutput = new float[] { reward };
+
+        // train the neural network
+        neuralNetwork.Train(state, targetOutput, learningRate);
     }
     
     //function to collect state info
@@ -198,6 +220,8 @@ public class AgentMovement : MonoBehaviour
         if (collision.transform.CompareTag("Obstacles"))
         {
             hitObstacle = true;
+
+            
         }
     }
 
@@ -225,12 +249,15 @@ public class AgentMovement : MonoBehaviour
 
     public void RespawnCar()
     {
-        GameObject newCar = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
-
-        AgentMovement newCarMovement = newCar.GetComponent<AgentMovement>();
-        if(newCarMovement != null)
+        if (isBeingDestroyed)
         {
-            newCarMovement.Initialize(carPrefab, spawnPoint);
+            GameObject newCar = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
+
+            AgentMovement newCarMovement = newCar.GetComponent<AgentMovement>();
+            if (newCarMovement != null)
+            {
+                newCarMovement.Initialize(carPrefab, spawnPoint);
+            }
         }
     }
 
@@ -239,8 +266,10 @@ public class AgentMovement : MonoBehaviour
         // count down dead timer
         curentDeadTimer -= Time.deltaTime;
 
-        if(curentDeadTimer <= 0)
+        if(curentDeadTimer <= 0 && !isBeingDestroyed)
         {
+            isBeingDestroyed = true;
+            TrainAgent();
             Destroy(gameObject);
             RespawnCar();
         }
