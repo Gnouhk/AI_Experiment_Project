@@ -15338,7 +15338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4d21abc80b31114fa8b54b26a3b4e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkShape: 040000002000000002000000
+  networkShape: 060000002000000004000000
 --- !u!114 &8959069320201607566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15354,12 +15354,13 @@ MonoBehaviour:
   wheelVehicle: {fileID: 8959069320201607568}
   carPrefab: {fileID: 9063124095491955142}
   spawnPoint: {fileID: 3634795499477601728, guid: 4dbcd94c6b37a8741ad7fe3bcaaaf423, type: 3}
-  deadTimer: 5
-  viewDistance: 20
   neuralNetwork: {fileID: 8959069320201607569}
+  deadTimer: 3
+  viewDistance: 20
   curentDeadTimer: 0
   currentCarSpeed: 0
-  relativeCheckpointPosition: {x: 0, y: 0, z: 0}
+  learningRate: 1000
+  isBeingDestroyed: 0
   checkpoints:
   - {fileID: 123328122566101721, guid: 38b397fb8569a2a478f50d2133b9d4e8, type: 3}
   - {fileID: 8553767098024915199, guid: 57260969b160b2847ac99f977e423b2e, type: 3}
@@ -15449,6 +15450,9 @@ MonoBehaviour:
   - {fileID: 1756810392301358863, guid: 23e00f56ba6497448be432f7e1606a5a, type: 3}
   - {fileID: 1857330595908580158, guid: 3864455b5614e9147be918d48f4ef5d1, type: 3}
   - {fileID: 2353584374171014753, guid: cfbc38b1093e74a41abcda0d413c5fc3, type: 3}
+  currentCheckpointIndex: 0
+  lastDistanceToCheckpoint: 0
+  relativeCheckpointPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &8959069320201607568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15592,7 +15596,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.246
   m_Pitch: 1
   Loop: 0
   Mute: 0

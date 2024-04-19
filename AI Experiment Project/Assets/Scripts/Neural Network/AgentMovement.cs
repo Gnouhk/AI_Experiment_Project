@@ -147,7 +147,7 @@ public class AgentMovement : MonoBehaviour
     {
         // clamp the values in case the outpud values outside the -1 and 1 range.
         float steeringOutput = Mathf.Clamp(nnOutput[0], -1f, 1f);
-        float throttleOutput = Mathf.Clamp(nnOutput[1], -1f, 1f);
+        float throttleOutput = Mathf.Clamp(nnOutput[1], 0f, 1f);
 
         //map the max steering angle to 30
         float maxSteeringAngle = 30f;
