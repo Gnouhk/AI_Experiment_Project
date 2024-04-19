@@ -41,7 +41,7 @@ public class AgentMovement : MonoBehaviour
     }
 
     private void Start()
-    {
+    { 
         if (checkpoints.Count > 0)
         {
             lastDistanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[currentCheckpointIndex].position);

@@ -164,6 +164,25 @@ public class NN : MonoBehaviour
         return lossGradients;
     }
 
+    public (float[,], float[]) [] GetWeightsAndBiases()
+    {
+        var weightsAndBiaese = new (float[,], float [])[layers.Length];
+        for(int i = 0; i < layers.Length; i++)
+        {
+            weightsAndBiaese[i] = (layers[i].weightsArray, layers[i].biasesArray);
+        }
+        return weightsAndBiaese;
+    }
+
+    public void SetWeightsAndBiases((float[,], float[])[] weightsAndBiases)
+    {
+        for (int i = 0; i < layers.Length; i++)
+        {
+            layers[i].weightsArray = weightsAndBiases[i].Item1;
+            layers[i].biasesArray = weightsAndBiases[i].Item2;
+        }
+    }
+
     private float DerivativeOfActivationFunction(float output)
     {
         return output > 0 ? 1f : 0f;
