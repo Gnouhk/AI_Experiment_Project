@@ -6,7 +6,7 @@ using UnityEngine;
 public class NN : MonoBehaviour
 {
     public Layer[] layers;
-    public int[] networkShape = {4, 32, 2};
+    public int[] networkShape = {9, 32, 4};
 
     public void Awake()
     {
@@ -23,7 +23,7 @@ public class NN : MonoBehaviour
     //feed input and return the output.
     public float[] Brain(float[] inputs)
     {
-        //UnityEngine.Debug.Log($"Running forward pass with inputs: {string.Join(", ", inputs)}");
+        UnityEngine.Debug.Log($"Brain method received inputs with length: {inputs.Length}");
         for (int i = 0; i < layers.Length; i++)
         {
             if (i == 0)
@@ -148,10 +148,6 @@ public class NN : MonoBehaviour
     private float[] CalculateLossGradient(float[] predictions, float[] expectedOutputs)
     {
         UnityEngine.Debug.Log($"Calculating loss gradients. Predictions: {string.Join(", ", predictions)}, Expected: {string.Join(", ", expectedOutputs)}");
-        if (predictions.Length != expectedOutputs.Length)
-        {
-            throw new ArgumentException("The predictions and expectedOutputs arrays must be of the same length.");
-        }
 
         float[] lossGradients = new float[predictions.Length];
         
@@ -188,21 +184,6 @@ public class NN : MonoBehaviour
         return output > 0 ? 1f : 0f;
     }
 
-    /* copy the weights and biases from one network to another
-    public Layer[] copyLayers()
-    {
-        Layer[] copiedLayer = new Layer[networkShape.Length];
-
-        for (int i = 0; i < layers.Length; i++)
-        {
-            copiedLayer[i] = new Layer(networkShape[i], networkShape[i + 1]);
-            System.Array.Copy (layers[i].weightsArray, copiedLayer[i].weightsArray, layers[i].weightsArray.GetLength(0) * layers[i].weightsArray.GetLength(1));
-            System.Array.Copy (layers[i].biasesArray, copiedLayer[i].biasesArray, layers[i].biasesArray.GetLength(0));
-        }
-        return (copiedLayer);
-    }
-    */
-
     public class Layer
     {
         public float[,] weightsArray;
@@ -217,6 +198,8 @@ public class NN : MonoBehaviour
         {
             this.n_neurons = n_neurons;
             this.n_inputs = n_inputs;
+
+            UnityEngine.Debug.Log($"Initializing layer with {n_inputs} inputs and {n_neurons} neurons.");
 
             weightsArray = new float[n_neurons, n_inputs];
             biasesArray = new float[n_neurons];

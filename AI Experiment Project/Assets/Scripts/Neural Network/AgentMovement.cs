@@ -78,6 +78,10 @@ public class AgentMovement : MonoBehaviour
         }
 
         float[] currentState = GetState();
+        if (currentState.Length != neuralNetwork.networkShape[0])
+        {
+            return;
+        }
 
         //use currentState as input for the neural network
         //and use the output to control the car
@@ -95,7 +99,6 @@ public class AgentMovement : MonoBehaviour
     {
         if(isBeingDestroyed)
         {
-            UnityEngine.Debug.Log("Attempted to train during destruction process, skipping.");
             return; 
         }
 
@@ -285,11 +288,13 @@ public class AgentMovement : MonoBehaviour
         {
             GameObject newCar = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
             AgentMovement newCarMovement = newCar.GetComponent<AgentMovement>();
+            newCarMovement.Initialize(carPrefab, spawnPoint);
 
+            UnityEngine.Debug.Log("Respawning car and re-initializing neural network.");
             if (bestAgent == this)
             {
                 newCarMovement.ApplyBestPerformance();
-                newCarMovement.Initialize(carPrefab, spawnPoint);
+
             }
         }
     }
