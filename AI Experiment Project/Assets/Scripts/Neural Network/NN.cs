@@ -23,7 +23,7 @@ public class NN : MonoBehaviour
     //feed input and return the output.
     public float[] Brain(float[] inputs)
     {
-        UnityEngine.Debug.Log($"Running forward pass with inputs: {string.Join(", ", inputs)}");
+        //UnityEngine.Debug.Log($"Running forward pass with inputs: {string.Join(", ", inputs)}");
         for (int i = 0; i < layers.Length; i++)
         {
             if (i == 0)
@@ -43,7 +43,7 @@ public class NN : MonoBehaviour
         }
         float[] output = layers[layers.Length - 1].nodeArray;
 
-        UnityEngine.Debug.Log($"Output from forward pass: {string.Join(", ", output)}");
+        //UnityEngine.Debug.Log($"Output from forward pass: {string.Join(", ", output)}");
         return output;
     }
 
@@ -103,8 +103,8 @@ public class NN : MonoBehaviour
         //loop through each layer
         for (int i = 0; i < layers.Length;i++)
         {
-            UnityEngine.Debug.Log($"Layer {i} weights after update: {string.Join(", ", layers[i].weightsArray.Cast<float>())}");
-            UnityEngine.Debug.Log($"Layer {i} biases after update: {string.Join(", ", layers[i].biasesArray)}");
+            //UnityEngine.Debug.Log($"Layer {i} weights after update: {string.Join(", ", layers[i].weightsArray.Cast<float>())}");
+            //UnityEngine.Debug.Log($"Layer {i} biases after update: {string.Join(", ", layers[i].biasesArray)}");
 
             float[] layerInputs = i == 0 ? inputs : layers[i - 1].nodeArray;
 

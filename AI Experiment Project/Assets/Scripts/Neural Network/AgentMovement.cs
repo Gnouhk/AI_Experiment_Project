@@ -34,6 +34,14 @@ public class AgentMovement : MonoBehaviour
     private bool justPassedCheckpoint = false;
     public Vector3 relativeCheckpointPosition; //position of the next checkpoint
 
+    //agents
+    private List<AgentMovement> agents;
+    private float bestReward = float.MinValue;
+    private AgentMovement bestAgent = null;
+
+    //static fields to store the best performance
+    private static (float[,], float[])[] bestWeightsAndBiases;
+
     private void Awake()
     {
         wheelVehicle = GetComponent<WheelVehicle>();
@@ -42,6 +50,8 @@ public class AgentMovement : MonoBehaviour
 
     private void Start()
     { 
+        agents = FindObjectsOfType<AgentMovement>().ToList();
+
         if (checkpoints.Count > 0)
         {
             lastDistanceToCheckpoint = Vector3.Distance(transform.position, checkpoints[currentCheckpointIndex].position);
@@ -52,6 +62,10 @@ public class AgentMovement : MonoBehaviour
     {
         UpdateDeadTimer();
         hitObstacle = false;
+
+        if (isBeingDestroyed) return;
+
+        CheckAndUpdateBestPerformance();
     }
 
     public void FixedUpdate()
@@ -197,6 +211,24 @@ public class AgentMovement : MonoBehaviour
         return reward;
     }
 
+    public void CopyWeightsFromBestAgent()
+    {
+        if(bestAgent != null)
+        {
+            //get weights and biases from the best agent's neural network
+            (float[,], float[])[] bestWeightsAndBiases = bestAgent.neuralNetwork.GetWeightsAndBiases();
+
+            //set these weights and biases as the starting point for other agents
+            foreach(var agent in agents)
+            {
+                if(agent != bestAgent)
+                {
+                    agent.neuralNetwork.SetWeightsAndBiases(bestWeightsAndBiases);
+                }
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         //if the agent collides with a checkpoint, renew the dead timer.
@@ -252,13 +284,32 @@ public class AgentMovement : MonoBehaviour
         if (isBeingDestroyed)
         {
             GameObject newCar = Instantiate(carPrefab, spawnPoint.position, spawnPoint.rotation);
-
             AgentMovement newCarMovement = newCar.GetComponent<AgentMovement>();
-            if (newCarMovement != null)
+
+            if (bestAgent == this)
             {
+                newCarMovement.ApplyBestPerformance();
                 newCarMovement.Initialize(carPrefab, spawnPoint);
             }
         }
+    }
+
+    public void OnDestroy()
+    {
+        if(bestAgent == this)
+        {
+            bestAgent = null;
+        }
+
+        CheckAndUpdateBestPerformance();
+    }
+
+    public void Initialize(GameObject prefab, Transform spawn)
+    {
+        carPrefab = prefab;
+        spawnPoint = spawn;
+
+        ApplyBestPerformance();
     }
 
     public void UpdateDeadTimer()
@@ -269,6 +320,12 @@ public class AgentMovement : MonoBehaviour
         if(curentDeadTimer <= 0 && !isBeingDestroyed)
         {
             isBeingDestroyed = true;
+
+            if(bestAgent != null && bestAgent != this)
+            {
+                ApplyBestPerformance();
+            }
+
             TrainAgent();
             Destroy(gameObject);
             RespawnCar();
@@ -280,9 +337,26 @@ public class AgentMovement : MonoBehaviour
         curentDeadTimer = deadTimer;
     }
 
-    public void Initialize(GameObject prefab, Transform spawn)
+    public void CheckAndUpdateBestPerformance()
     {
-        carPrefab = prefab;
-        spawnPoint = spawn;
+        if (isBeingDestroyed) return;
+        float currentReward = CalculatedReward();
+
+        if (currentReward > bestReward)
+        {
+            bestReward = currentReward;
+            bestWeightsAndBiases = neuralNetwork.GetWeightsAndBiases();
+            UnityEngine.Debug.Log("Updated best performance");
+            bestAgent = this;
+        }
+    }
+
+    public void ApplyBestPerformance()
+    {
+        if (bestWeightsAndBiases != null && neuralNetwork != null)
+        {
+            neuralNetwork.SetWeightsAndBiases(bestWeightsAndBiases);
+            UnityEngine.Debug.Log("Applied best performance to a car");
+        }
     }
 }
