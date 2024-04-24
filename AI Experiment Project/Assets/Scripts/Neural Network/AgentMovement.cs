@@ -49,7 +49,7 @@ public class AgentMovement : MonoBehaviour
     }
 
     private void Start()
-    { 
+    {
         agents = FindObjectsOfType<AgentMovement>().ToList();
 
         if (checkpoints.Count > 0)
@@ -71,7 +71,7 @@ public class AgentMovement : MonoBehaviour
     public void FixedUpdate()
     {
         //update the relative position of the Snext checkpoint
-        if(currentCheckpointIndex < checkpoints.Count)
+        if (currentCheckpointIndex < checkpoints.Count)
         {
             Transform nextCheckpoint = checkpoints[currentCheckpointIndex];
             relativeCheckpointPosition = nextCheckpoint.position - transform.position;
@@ -97,9 +97,9 @@ public class AgentMovement : MonoBehaviour
 
     public void TrainAgent()
     {
-        if(isBeingDestroyed)
+        if (isBeingDestroyed)
         {
-            return; 
+            return;
         }
 
         //get state, action, and reward
@@ -113,7 +113,7 @@ public class AgentMovement : MonoBehaviour
         // train the neural network
         neuralNetwork.Train(state, targetOutput, learningRate);
     }
-    
+
     //function to collect state info
     public float[] GetState()
     {
@@ -169,7 +169,7 @@ public class AgentMovement : MonoBehaviour
         //map the max steering angle to 30
         float maxSteeringAngle = 30f;
         float steeringAngle = steeringOutput * maxSteeringAngle;
-        
+
         //apply actions to the car
         //move
         wheelVehicle.Steering = steeringAngle;
@@ -188,7 +188,7 @@ public class AgentMovement : MonoBehaviour
         float progress = lastDistanceToCheckpoint - currentDistanceToCheckpoint;
 
         //reward progress towards the checkpoint
-        if(progress > 0)
+        if (progress > 0)
         {
             reward += progress;
         }
@@ -216,15 +216,15 @@ public class AgentMovement : MonoBehaviour
 
     public void CopyWeightsFromBestAgent()
     {
-        if(bestAgent != null)
+        if (bestAgent != null)
         {
             //get weights and biases from the best agent's neural network
             (float[,], float[])[] bestWeightsAndBiases = bestAgent.neuralNetwork.GetWeightsAndBiases();
 
             //set these weights and biases as the starting point for other agents
-            foreach(var agent in agents)
+            foreach (var agent in agents)
             {
-                if(agent != bestAgent)
+                if (agent != bestAgent)
                 {
                     agent.neuralNetwork.SetWeightsAndBiases(bestWeightsAndBiases);
                 }
@@ -235,10 +235,10 @@ public class AgentMovement : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         //if the agent collides with a checkpoint, renew the dead timer.
-        if(other.CompareTag("Checkpoint"))
+        if (other.CompareTag("Checkpoint"))
         {
             //check if the checkpoint is the next one we're expecting
-            if(checkpoints[currentCheckpointIndex] == other.transform)
+            if (checkpoints[currentCheckpointIndex] == other.transform)
             {
                 //update the checkpoint index to the next one
                 currentCheckpointIndex = (currentCheckpointIndex + 1) % checkpoints.Count;
@@ -256,13 +256,13 @@ public class AgentMovement : MonoBehaviour
         {
             hitObstacle = true;
 
-            
+
         }
     }
 
     public bool JustPassedCheckpoint()
     {
-        if(justPassedCheckpoint)
+        if (justPassedCheckpoint)
         {
             //reset the flag before returning true
             justPassedCheckpoint = false;
@@ -274,7 +274,7 @@ public class AgentMovement : MonoBehaviour
     public bool HitObstacles()
     {
         //reports whether the car hit an obstacles then reset the flag
-        if(hitObstacle)
+        if (hitObstacle)
         {
             hitObstacle = false;
             return true;
@@ -301,7 +301,7 @@ public class AgentMovement : MonoBehaviour
 
     public void OnDestroy()
     {
-        if(bestAgent == this)
+        if (bestAgent == this)
         {
             bestAgent = null;
         }
@@ -322,11 +322,11 @@ public class AgentMovement : MonoBehaviour
         // count down dead timer
         curentDeadTimer -= Time.deltaTime;
 
-        if(curentDeadTimer <= 0 && !isBeingDestroyed)
+        if (curentDeadTimer <= 0 && !isBeingDestroyed)
         {
             isBeingDestroyed = true;
 
-            if(bestAgent != null && bestAgent != this)
+            if (bestAgent != null && bestAgent != this)
             {
                 ApplyBestPerformance();
             }
