@@ -39,8 +39,10 @@ public class CarManager : MonoBehaviour
 
         if(currentGenerationCount >= generationSize)
         {
-            int bestIndex = generationReward.IndexOf(generationRewards.Max());
+            int bestIndex = generationRewards.IndexOf(generationRewards.Max());
             (float[,], float[])[] bestWeightsAndBiases = generationWeightsAndBiases[bestIndex];
+
+            //update all car 
         }
     }
 
