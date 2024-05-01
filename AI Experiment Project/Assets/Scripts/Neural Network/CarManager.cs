@@ -42,7 +42,16 @@ public class CarManager : MonoBehaviour
             int bestIndex = generationRewards.IndexOf(generationRewards.Max());
             (float[,], float[])[] bestWeightsAndBiases = generationWeightsAndBiases[bestIndex];
 
-            //update all car 
+            //update all car's neural networks with the these best weights and biases
+            foreach (var car in allCars)
+            {
+                car.neuralNetwork.SetWeightsAndBiases(bestWeightsAndBiases);
+            }
+
+            //reset for the next generation
+            currentGenerationCount = 0;
+            generationRewards.Clear();
+            generationWeightsAndBiases.Clear();
         }
     }
 
