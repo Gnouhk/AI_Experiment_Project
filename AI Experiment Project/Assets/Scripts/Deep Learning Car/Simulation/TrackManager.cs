@@ -111,7 +111,7 @@ public class TrackManager : MonoBehaviour
         startRotation = PrototypeCar.Transform.rotation;
         PrototypeCar.gameObject.SetActive(false);
 
-        CalculateCheckpointPercentages();
+        CalculateCheckpointPercentage();
     }
 
     #endregion
@@ -127,7 +127,7 @@ public class TrackManager : MonoBehaviour
 
             if (car.Car.enabled)
             {
-                car.Car.CurrentCompletionReward = GetCompletedPerc(car.Car, ref car.CheckpointIndex);
+                car.Car.CurrentCompletionReward = GetCompletePerc(car.Car, ref car.CheckpointIndex);
 
                 // Update best
                 if(BestCar == null || car.Car.CurrentCompletionReward >= BestCar.CurrentCompletionReward)
@@ -234,7 +234,7 @@ public class TrackManager : MonoBehaviour
         }
 
         // Calculate distance to next checkpoint
-        float checkPointDistance = Vector3.Distance(car.transform.positionm, checkpoints[curCheckpointIndex].transform.position);
+        float checkPointDistance = Vector3.Distance(car.transform.position, checkpoints[curCheckpointIndex].transform.position);
         
         // Check if checkpoint can be capture
         if (checkPointDistance <= checkpoints[curCheckpointIndex].CaptureRadius)

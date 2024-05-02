@@ -53,29 +53,27 @@ public class GenericAlgorithm
     #region Operator Methods
 
     // Method used to initalise the initial population.
-    public InitialisationOperator InitialisePopulation = DafaultPopulationInitialisation;
+    //public InitialisationOperator InitialisePopulation = DafaultPopulationInitialisation;
 
     // Method used to evaluate the current population
-    public EvaluationOperator Evaluation = AsyncEvaluation;
+    //public EvaluationOperator Evaluation = AsyncEvaluation;
 
     // Method used to calculate the fitness value of each genotype of the current population
-    public FitnessCalculation FitnessCalculationMethod = DefaultFitnessCalculation;
+    //public FitnessCalculation FitnessCalculationMethod = DefaultFitnessCalculation;
 
     // Method used to select genotypes of the current population and crease the intermediate population
-    public SelectionOperator Selection = DefaultFitnessCalculation;
+    //public SelectionOperator Selection = DefaultFitnessCalculation;
 
     // Method used to recombine the intermediate population to generate a new population.
-    public RecombinationOperator Recombination = DefaultRecombinationOperator;
+    //public RecombinationOperator Recombination = DefaultRecombinationOperator;
 
     // Method used to mutate the new population
-    public MutationOperator Mutation = DefaultMutationOperator;
+    //public MutationOperator Mutation = DefaultMutationOperator;
 
     // Method used to check whether any termination criteria has been met.
-    public CheckTerminationCriterion TerminationCriterion = null;
+    //public CheckTerminationCriterion TerminationCriterion = null;
 
     #endregion
-
-
 
     #endregion
 }
