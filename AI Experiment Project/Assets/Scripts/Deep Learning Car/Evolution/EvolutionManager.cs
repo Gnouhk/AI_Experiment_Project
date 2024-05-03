@@ -62,8 +62,8 @@ public class EvolutionManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("More than one EvolutionManager in the Scene"); 
-            return
+            Debug.LogError("More than one EvolutionManager in the Scene");
+            return;
         }
         Instance = this;
     }
