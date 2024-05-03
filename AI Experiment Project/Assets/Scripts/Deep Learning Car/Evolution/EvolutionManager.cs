@@ -74,8 +74,42 @@ public class EvolutionManager : MonoBehaviour
 
     public void StartEvolution()
     {
+        // Create neural network to determine parameter count
+        NeuralNetwork nn = new NeuralNetwork(FNNTopology);
 
+        // Setup genetic algorithm 
+        genericAlgorithm = new GenericAlgorithm((uint)nn.WeightCount, (uint)PopulationSize);
+        genotypesSaved = 0;
+
+        genericAlgorithm.Evaluation = StartEvaluation;
+
+        if(ElitistSelection)
+        {
+            // Second configuration
+            genericAlgorithm.Selection = GenericAlgorithm.DefaultSelectionOperator;
+            genericAlgorithm.Recombination = RandomRecombination;
+            genericAlgorithm.Mutation = MutateAllButBestTwo;
+        }
+        else
+        {
+            // First configuration
+            genericAlgorithm.Selection = RemainerStochasticSampling;
+            genericAlgorithm.Recombination = RandomRecombination;
+            genericAlgorithm.Mutation = MutateAllButBestTwo;
+        }
+
+        AllAgentsDied += genericAlgorithm.EvaluationFinished;
+    
+        // Statistics
+        if(SaveStatistics)
+        {
+            statisticsFileName = "Evaluation - " + GameStateManager.Instance.TrackName + " " + DateTime.Now.ToString("yyyy_MM_dd_HH-mm-ss");
+        }    
+    
+    
     }
+
+    
 
     #endregion
 }
