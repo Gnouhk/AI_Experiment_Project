@@ -60,7 +60,7 @@ namespace VehicleBehaviour
                 return isGrounded;
 
             lastGroundCheck = Time.frameCount;
-            isGrounded = true;
+            isGrounded = true;  
             foreach (WheelCollider wheel in wheels)
             {
                 if (!wheel.gameObject.activeSelf || !wheel.isGrounded)

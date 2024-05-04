@@ -204,7 +204,7 @@ public class EvolutionManager : MonoBehaviour
         TrackManager.Instance.SetCarAmount(agents.Count);
         IEnumerator<CarController> carsEnum = TrackManager.Instance.GetCarEnumerator();
 
-        for(int i = 0; agents.Count > 0; i++)
+        for(int i = 0; i < agents.Count; i++)
         {
             if(!carsEnum.MoveNext())
             {

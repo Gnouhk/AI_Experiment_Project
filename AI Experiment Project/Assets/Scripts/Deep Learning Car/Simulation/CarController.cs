@@ -18,7 +18,7 @@ public class CarController : MonoBehaviour
     public float CurrentCompletionReward
     {
         get { return Agent.Genotype.Evaluation; }
-        set { Agent.Genotype.Evaluation = value;}
+        set { Agent.Genotype.Evaluation = value; }
     }
 
     // Whether this car is controllable by user
@@ -87,7 +87,7 @@ public class CarController : MonoBehaviour
             // Get readings from sensors
             double[] sensorOutput = new double[sensors.Length];
 
-            for (int i = 0; i < sensorOutput.Length; i++)
+            for (int i = 0; i < sensors.Length; i++)
             {
                 sensorOutput[i] = sensors[i].Output;
             }
@@ -119,6 +119,7 @@ public class CarController : MonoBehaviour
 
     public void CheckpointCaptured()
     {
+        UnityEngine.Debug.Log("Captured");
         timeSinceLastCheckpoint = 0;
     }
 

@@ -25,6 +25,28 @@ public class CarMovement : MonoBehaviour
 
     private double horizontalInput, verticalInput;
 
+    public double HorizontalInput
+    {
+        get => horizontalInput;
+        set
+        {
+            horizontalInput = value;
+            if (car != null) car.Throttle = (float)value; // Cast to float if necessary
+            UnityEngine.Debug.Log($"Horizontal Input set: {horizontalInput}");
+        }
+    }
+
+    public double VerticalInput
+    {
+        get => verticalInput;
+        set
+        {
+            verticalInput = value;
+            if (car != null) car.Steering = (float)value; // Cast to float if necessary
+            UnityEngine.Debug.Log($"Vertical Input set: {verticalInput}");
+        }
+    }
+
     public double[] CurrentInputs 
     { 
         get { return new double[] { horizontalInput, verticalInput }; } 
@@ -37,6 +59,7 @@ public class CarMovement : MonoBehaviour
     private void Start()
     {
         controller = GetComponent<CarController>();
+        car = GetComponent<WheelVehicle>();
     }
 
     #endregion
@@ -60,33 +83,31 @@ public class CarMovement : MonoBehaviour
     // Check for user input
     private void CheckInput()
     {
-        if (car != null)
-        {
-            horizontalInput = car.Throttle;
-            verticalInput = car.Steering;
-        }
+        HorizontalInput = car.Throttle;
+        VerticalInput = car.Steering;
     }
 
     // Applies the currently set input
     private void ApplyInput()
-    {
+    { 
+
         // Cap input
-        if (verticalInput > 1)
+        if (VerticalInput > 1)
         {
-            verticalInput = 1;
+            VerticalInput = 1;
         } 
-        else if (verticalInput < -1)
+        else if (VerticalInput < -1)
         {
-            verticalInput = -1;
+            VerticalInput = -1;
         }
 
-        if(horizontalInput > 1)
+        if(HorizontalInput > 1)
         {
-            horizontalInput = 1;
+            HorizontalInput = 1;
         }
-        else if (horizontalInput < -1)
+        else if (HorizontalInput < -1)
         {
-            horizontalInput = -1;
+            HorizontalInput = -1;
         }
 
         // Car can accelerate furthur if velocity is lower than engineForce * MAX_VEL
@@ -94,17 +115,17 @@ public class CarMovement : MonoBehaviour
 
         if (verticalInput < 0)
         {
-            canAccelerate = Velocity > verticalInput * MAX_VEL;
+            canAccelerate = Velocity > VerticalInput * MAX_VEL;
         }
         else if (verticalInput > 0)
         {
-            canAccelerate = Velocity < verticalInput * MAX_VEL;
+            canAccelerate = Velocity < VerticalInput * MAX_VEL;
         }
 
         // Set velocity 
         if (canAccelerate)
         {
-            Velocity += (float)verticalInput * ACCELERATION * Time.deltaTime;
+            Velocity += (float)VerticalInput * ACCELERATION * Time.deltaTime;
 
             // Cap velocity
             if (Velocity > MAX_VEL)
@@ -119,14 +140,14 @@ public class CarMovement : MonoBehaviour
 
         // Set rotation
         Rotation = transform.rotation;
-        Rotation *= Quaternion.AngleAxis((float) - horizontalInput * TURN_SPEED * Time.deltaTime, new Vector3(0, 0, 1));
+        Rotation *= Quaternion.AngleAxis((float) - HorizontalInput * TURN_SPEED * Time.deltaTime, new Vector3(0, 0, 1));
     }
 
     // Sets the engine and turning input according to the given values
     public void SetInputs(double[] input)
     {
-        horizontalInput = input[0];
-        verticalInput = input[1];
+        HorizontalInput = input[0];
+        VerticalInput = input[1];
     }
 
     // Applies the current velocity to the position of the car
@@ -142,7 +163,7 @@ public class CarMovement : MonoBehaviour
     // Applies some friction to velocity
     private void ApplyFriction()
     {
-        if (verticalInput == 0)
+        if (VerticalInput == 0)
         {
             if (Velocity > 0)
             {
@@ -168,6 +189,7 @@ public class CarMovement : MonoBehaviour
     {
         if(HitWall != null)
         {
+            UnityEngine.Debug.Log("Hit a wall");
             HitWall();
         }
     }

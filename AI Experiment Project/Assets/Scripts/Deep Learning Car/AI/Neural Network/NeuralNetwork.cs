@@ -47,14 +47,14 @@ public class NeuralNetwork
         }
 
         // Process inputs by propagating values through all layers
-        double[] output = inputs;
+        double[] outputs = inputs;
         
         foreach ( NeuralLayer layer in Layers )
         {
-            output = layer.ProcessInputs(output);
+            outputs = layer.ProcessInputs(outputs);
         }
 
-        return output;
+        return outputs  ;
     }
 
     // Sets the weights of this network to random values in given range

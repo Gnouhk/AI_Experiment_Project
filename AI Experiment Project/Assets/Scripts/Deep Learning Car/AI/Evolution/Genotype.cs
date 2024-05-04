@@ -84,11 +84,11 @@ public class Genotype : IComparable<Genotype>, IEnumerable<float>
             throw new ArgumentException("Minimum value may not exceed maximum value");
         }
 
-        float ranege = maxValue - minValue;
+        float range = maxValue - minValue;
         for (int i = 0; i < parameters.Length;i++)
         {
             //Create a random float between minValue and maxValue
-            parameters [i] = (float)((randomizer.NextDouble() * ranege) + minValue);
+            parameters [i] = (float)((randomizer.NextDouble() * range) + minValue);
         }
     }
 

@@ -107,8 +107,8 @@ public class TrackManager : MonoBehaviour
         checkpoints = GetComponentsInChildren<CheckPoint>();
 
         // Set start position and hide prototype
-        startPosition = PrototypeCar.Transform.position;
-        startRotation = PrototypeCar.Transform.rotation;
+        startPosition = PrototypeCar.transform.position;
+        startRotation = PrototypeCar.transform.rotation;
         PrototypeCar.gameObject.SetActive(false);
 
         CalculateCheckpointPercentage();
@@ -207,10 +207,10 @@ public class TrackManager : MonoBehaviour
         checkpoints[0].AccumulatedDistance = 0; // Start
 
         // Iterate over remaining checkpoints and set distance to previous and accumulated track distance
-        for(int i = 0; i < checkpoints.Length; i++)
+        for(int i = 1; i < checkpoints.Length; i++)
         {
             checkpoints[i].DistanceToPrevious = Vector3.Distance(checkpoints[i].transform.position, checkpoints[i - 1].transform.position);
-            checkpoints[i].AccumulatedDistance = checkpoints[i - 1].AccumulatedDistance + checkpoints[i].AccumulatedDistance;
+            checkpoints[i].AccumulatedDistance = checkpoints[i - 1].AccumulatedDistance + checkpoints[i].DistanceToPrevious;
         }
 
         // Set track length to accumulated distance of last checkpoint
@@ -246,7 +246,7 @@ public class TrackManager : MonoBehaviour
         else
         {
             // Return accumulated reward of last checkpoint + reward of distance to next checkpoint
-            return checkpoints[curCheckpointIndex - 1].AccumulatedDistance + checkpoints[curCheckpointIndex].GetRewardValue(checkPointDistance);
+            return checkpoints[curCheckpointIndex - 1].AccumulatedReward + checkpoints[curCheckpointIndex].GetRewardValue(checkPointDistance);
         }
     }
 
