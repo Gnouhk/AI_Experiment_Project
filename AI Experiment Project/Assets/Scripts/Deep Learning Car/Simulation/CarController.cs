@@ -81,12 +81,6 @@ public class CarController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Agent == null)
-        {
-            Debug.LogError("Agent is not assigned");
-            return;
-        }
-
         // Get control inputs from Agent
         if (!UseUserInput)
         {
