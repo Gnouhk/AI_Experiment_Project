@@ -49,7 +49,7 @@ public class CarMovement : MonoBehaviour
 
     public double[] CurrentInputs 
     { 
-        get { return new double[] { horizontalInput, verticalInput }; } 
+        get { return new double[] { HorizontalInput, VerticalInput }; } 
     }
 
     #endregion
