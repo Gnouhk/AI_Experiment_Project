@@ -1,0 +1,6 @@
+Evaluation of a Population with size 10, on Track "Neural Network with Evolutionary", using the following GA operators: 
+Selection: DefaultSelectionOperator
+Recombination: RandomRecombination
+Mutation: MutateAllButBestTwo
+FitnessCalculation: DefaultFitnessCalculation
+

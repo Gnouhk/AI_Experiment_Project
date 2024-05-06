@@ -12,6 +12,7 @@ public class Agent : IComparable<Agent>
     public NeuralNetwork FNN { get; private set; }
 
     private bool isAlive = false;
+
     public bool IsAlive
     {
         get { return isAlive; }

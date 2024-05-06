@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using Unity.VisualScripting;
 using System.Globalization;
+using System.Diagnostics;
 
 public class EvolutionManager : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class EvolutionManager : MonoBehaviour
     [SerializeField]
     private uint SaveFirstNGenotype = 0;
     private uint genotypesSaved = 0;
-
+     
     // Population size
     [SerializeField]
     private int PopulationSize = 30;
@@ -63,7 +64,7 @@ public class EvolutionManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("More than one EvolutionManager in the Scene");
+            UnityEngine.Debug.LogError("More than one EvolutionManager in the Scene");
             return;
         }
         Instance = this;
@@ -79,8 +80,10 @@ public class EvolutionManager : MonoBehaviour
         NeuralNetwork nn = new NeuralNetwork(FNNTopology);
 
         // Setup genetic algorithm 
-        geneticAlgorithm = new GenericAlgorithm((uint)nn.WeightCount, (uint)PopulationSize);
+        geneticAlgorithm = new GenericAlgorithm((uint) nn.WeightCount, (uint) PopulationSize);
         genotypesSaved = 0;
+
+        UnityEngine.Debug.Log("Starting Evolution: Generation Count = " + GenerationCount);
 
         geneticAlgorithm.Evaluation = StartEvaluation;
 
@@ -119,6 +122,7 @@ public class EvolutionManager : MonoBehaviour
         }
 
         geneticAlgorithm.Start();
+        UnityEngine.Debug.Log("Evolution Started: Agents Count = " + agents.Count);
     }
 
     // Writes the starting line to the statistics file.
@@ -208,7 +212,7 @@ public class EvolutionManager : MonoBehaviour
         {
             if(!carsEnum.MoveNext())
             {
-                Debug.LogError("Cars enum ended before agents");
+                UnityEngine.Debug.LogError("Cars enum ended before agents");
                 break;
             }
 
@@ -224,7 +228,6 @@ public class EvolutionManager : MonoBehaviour
     private void OnAgentDied(Agent agent)
     {
         AgentsAliveCount--;
-
         if (AgentsAliveCount == 0 && AllAgentsDied != null) 
         {
             AllAgentsDied();

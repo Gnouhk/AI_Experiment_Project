@@ -32,26 +32,12 @@ public class GameStateManager : MonoBehaviour
 
     private void Start()
     {
-        TrackManager.Instance.BestCarChanged += OnBestCarChanged;
-        UnityEngine.Debug.Log("StartEvaluation");
         EvolutionManager.Instance.StartEvolution();
     }
 
     #endregion
 
     #region Methods
-
-    private void OnBestCarChanged(CarController bestCar)
-    {
-        if (bestCar == null)
-        {
-            //Camera.SetTarget(null);
-        }
-        else
-        {
-            //Camera.SetTarget(bestCar.gameObject);
-        }
-    }
 
     #endregion
 }

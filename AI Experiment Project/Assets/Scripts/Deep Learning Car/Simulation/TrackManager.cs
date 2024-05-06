@@ -180,7 +180,6 @@ public class TrackManager : MonoBehaviour
     // Restarts all cars and puts them at the track start
     public void Restart()
     {
-        UnityEngine.Debug.Log("Restart");
         foreach (RaceCar car in cars)
         {
             car.Car.transform.position = startPosition;

@@ -32,7 +32,6 @@ public class CarMovement : MonoBehaviour
         {
             horizontalInput = value;
             if (car != null) car.Throttle = (float)value; // Cast to float if necessary
-            UnityEngine.Debug.Log($"Horizontal Input set: {horizontalInput}");
         }
     }
 
@@ -43,7 +42,6 @@ public class CarMovement : MonoBehaviour
         {
             verticalInput = value;
             if (car != null) car.Steering = (float)value; // Cast to float if necessary
-            UnityEngine.Debug.Log($"Vertical Input set: {verticalInput}");
         }
     }
 
@@ -113,11 +111,11 @@ public class CarMovement : MonoBehaviour
         // Car can accelerate furthur if velocity is lower than engineForce * MAX_VEL
         bool canAccelerate = false;
 
-        if (verticalInput < 0)
+        if (VerticalInput < 0)
         {
             canAccelerate = Velocity > VerticalInput * MAX_VEL;
         }
-        else if (verticalInput > 0)
+        else if (VerticalInput > 0)
         {
             canAccelerate = Velocity < VerticalInput * MAX_VEL;
         }
@@ -189,7 +187,6 @@ public class CarMovement : MonoBehaviour
     {
         if(HitWall != null)
         {
-            UnityEngine.Debug.Log("Hit a wall");
             HitWall();
         }
     }
@@ -199,6 +196,7 @@ public class CarMovement : MonoBehaviour
     {
         Velocity = 0;
         Rotation = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
+        car.enabled = false; 
     }
 
     #endregion
