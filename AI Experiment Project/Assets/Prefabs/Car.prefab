@@ -21633,7 +21633,7 @@ MonoBehaviour:
   steerAngle: 25
   steerSpeed: 0.25
   jumpVel: 1.5
-  driftIntensity: 1.3
+  driftIntensity: 0.2
   isDead: 0
   centerOfMass: {fileID: 9185641273569105914}
   downforce: 8

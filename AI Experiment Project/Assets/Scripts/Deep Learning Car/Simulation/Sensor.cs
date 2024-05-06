@@ -7,7 +7,7 @@ public class Sensor : MonoBehaviour
     [SerializeField] private LayerMask LayerToSense;
     [SerializeField] private GameObject Sphere;
 
-    private const float MAX_DIST = 10f;
+    private const float MAX_DIST = 12f;
     private const float MIN_DIST = 0.01f;
 
     private Vector3 _sensorEndPosition;

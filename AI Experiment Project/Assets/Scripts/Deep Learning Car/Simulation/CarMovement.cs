@@ -14,7 +14,7 @@ public class CarMovement : MonoBehaviour
     private WheelCollider wheel;
 
     // Movement constants
-    private const float MAX_VEL = 20f;
+    private const float MAX_VEL = 10f;
     private const float ACCELERATION = 8f;
     private const float VEL_FRICT = 2f;
     private const float TURN_SPEED = 100;
