@@ -2,9 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using Unity.VisualScripting;
-using System.Globalization;
-using System.Diagnostics;
 
 public class EvolutionManager : MonoBehaviour
 {
@@ -83,7 +80,7 @@ public class EvolutionManager : MonoBehaviour
         geneticAlgorithm = new GenericAlgorithm((uint) nn.WeightCount, (uint) PopulationSize);
         genotypesSaved = 0;
 
-        UnityEngine.Debug.Log("Starting Evolution: Generation Count = " + GenerationCount);
+        UnityEngine.Debug.Log("Starting Evolution");
 
         geneticAlgorithm.Evaluation = StartEvaluation;
 
@@ -200,6 +197,8 @@ public class EvolutionManager : MonoBehaviour
         agents.Clear();
         AgentsAliveCount = 0;
 
+        UnityEngine.Debug.Log("StartEvaluation");
+
         foreach (Genotype genotype in currentPopulation)
         {
             agents.Add(new Agent(genotype, Mathematic.SoftSignFunction, FNNTopology));
@@ -220,6 +219,7 @@ public class EvolutionManager : MonoBehaviour
             AgentsAliveCount++;
             agents[i].AgentDied += OnAgentDied;
         }
+
 
         TrackManager.Instance.Restart();
     }

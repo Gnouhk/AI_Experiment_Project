@@ -4,10 +4,7 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
     #region Members
-
     public float CaptureRadius = 3;
-    private GameObject Checkpoints;
-
     public float RewardValue { get; set; }
     public float DistanceToPrevious { get; set; }
     

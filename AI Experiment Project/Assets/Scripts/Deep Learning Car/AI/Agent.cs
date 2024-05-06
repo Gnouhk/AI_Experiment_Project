@@ -79,13 +79,13 @@ public class Agent : IComparable<Agent>
     {
         Genotype.Evaluation = 0;
         Genotype.Fitness = 0;
-        isAlive = true;
+        IsAlive = true;
     }
 
     // Kill this agent
     public void Kill()
     {
-        isAlive = false;
+        IsAlive = false;
     }
 
     // Compares this agent to another agent, by comparing their underlying genotype

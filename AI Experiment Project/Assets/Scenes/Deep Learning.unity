@@ -378,7 +378,7 @@ MonoBehaviour:
   SaveStatistics: 0
   SaveFirstNGenotype: 5
   PopulationSize: 10
-  RestartAfter: 1
+  RestartAfter: 0
   ElitistSelection: 1
   FNNTopology: 05000000040000000300000002000000
 --- !u!4 &1327938894

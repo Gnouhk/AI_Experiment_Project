@@ -11,7 +11,7 @@ public class CarController : MonoBehaviour
     private static int NextID { get { return idGenerator++; } }
 
     // Maximum delay in seconds between the collection of two checkpoints until this car dies
-    private const float MAX_CHECKPOINT_DELAY = 7;
+    private const float MAX_CHECKPOINT_DELAY = 10;
 
     public Agent Agent { get; set; }
 
@@ -119,7 +119,7 @@ public class CarController : MonoBehaviour
 
     public void CheckpointCaptured()
     {
-        UnityEngine.Debug.Log("Captured");
+        UnityEngine.Debug.Log("Checkpoint captured");
         timeSinceLastCheckpoint = 0;
     }
 
