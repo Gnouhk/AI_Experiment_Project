@@ -295,7 +295,7 @@ public class EvolutionManager : MonoBehaviour
 
             Genotype offspring1, offspring2;
             GenericAlgorithm.CompleteCrossover(intermediatePopulation[randomIndex1], intermediatePopulation[randomIndex2],
-                GenericAlgorithm.DefCrossSwapProp, out offspring1, out offspring2);
+                GenericAlgorithm.DefCrossSwapProb, out offspring1, out offspring2);
 
             newPopulation.Add(offspring1);
             if (newPopulation.Count < newPopulationSize)
@@ -314,7 +314,7 @@ public class EvolutionManager : MonoBehaviour
         {
             if (randomizer.NextDouble() < GenericAlgorithm.DefMutationPerc)
             {
-                GenericAlgorithm.MutateGenotype(newPopulation[i], GenericAlgorithm.DefMutationProp, GenericAlgorithm.DefMutationAmount); ;
+                GenericAlgorithm.MutateGenotype(newPopulation[i], GenericAlgorithm.DefMutationProb, GenericAlgorithm.DefMutationAmount); ;
             }
         }
     }
@@ -325,7 +325,7 @@ public class EvolutionManager : MonoBehaviour
         {
             if(randomizer.NextDouble() < GenericAlgorithm.DefMutationPerc)
             {
-                GenericAlgorithm.MutateGenotype(genotype, GenericAlgorithm.DefMutationProp, GenericAlgorithm.DefMutationAmount);
+                GenericAlgorithm.MutateGenotype(genotype, GenericAlgorithm.DefMutationProb, GenericAlgorithm.DefMutationAmount);
             }
         }
     }

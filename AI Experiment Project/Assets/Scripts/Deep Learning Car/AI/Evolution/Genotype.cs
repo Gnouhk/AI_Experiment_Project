@@ -17,7 +17,7 @@ public class Genotype : IComparable<Genotype>, IEnumerable<float>
     public float Fitness { get; set; }
 
     // The vector of parameters of this genotype
-    public float[] parameters;
+    private float[] parameters;
     public int ParameterCount
     {
         get
@@ -140,9 +140,9 @@ public class Genotype : IComparable<Genotype>, IEnumerable<float>
         string data = File.ReadAllText(filePath);
 
         List<float> parameters = new List<float>();
-        string[] panamStrings = data.Split(';');
+        string[] paramStrings = data.Split(';');
 
-        foreach (string parameter in panamStrings)
+        foreach (string parameter in paramStrings)
         {
             float parsed;
 

@@ -377,10 +377,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SaveStatistics: 0
   SaveFirstNGenotype: 5
-  PopulationSize: 10
+  PopulationSize: 30
   RestartAfter: 0
   ElitistSelection: 1
-  FNNTopology: 05000000040000000300000002000000
+  FNNTopology: 0500000006000000040000000300000002000000
 --- !u!4 &1327938894
 Transform:
   m_ObjectHideFlags: 0

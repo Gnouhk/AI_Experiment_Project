@@ -1,4 +1,5 @@
 using UnityEngine;
+using VehicleBehaviour;
 
 public class CarController : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class CarController : MonoBehaviour
     private static int NextID { get { return idGenerator++; } }
 
     // Maximum delay in seconds between the collection of two checkpoints until this car dies
-    private const float MAX_CHECKPOINT_DELAY = 10;
+    private const float MAX_CHECKPOINT_DELAY = 5;
 
     public Agent Agent { get; set; }
 
@@ -25,6 +26,8 @@ public class CarController : MonoBehaviour
     public bool UseUserInput = false;
 
     public CarMovement Movement { get; private set; }
+    public WheelCollider Wheel { get; private set; }
+    public WheelVehicle Car { get; private set; }
 
     // The current inputs for controlling the CarMovement components
     public double[] CurrentControlInputs
@@ -45,6 +48,8 @@ public class CarController : MonoBehaviour
         Movement = GetComponent<CarMovement>();
         Transform = GetComponent<Transform>();
         sensors = GetComponentsInChildren<Sensor>();
+        Wheel = GetComponentInChildren<WheelCollider>();
+        Car = GetComponent<WheelVehicle>();
     }
 
     private void Start()
@@ -64,6 +69,9 @@ public class CarController : MonoBehaviour
     {
         Movement.enabled = true;
         timeSinceLastCheckpoint = 0;
+        Wheel.enabled = true;
+        Car.enabled = true;
+
 
         foreach (Sensor s in sensors)
         {
@@ -108,6 +116,7 @@ public class CarController : MonoBehaviour
         this.enabled = false;
         Movement.Stop();
         Movement.enabled = false;
+
 
         foreach (Sensor s in sensors)
         {

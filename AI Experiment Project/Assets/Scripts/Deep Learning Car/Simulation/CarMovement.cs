@@ -11,6 +11,7 @@ public class CarMovement : MonoBehaviour
 
     // Movement
     private WheelVehicle car;
+    private WheelCollider wheel;
 
     // Movement constants
     private const float MAX_VEL = 20f;
@@ -58,6 +59,7 @@ public class CarMovement : MonoBehaviour
     {
         controller = GetComponent<CarController>();
         car = GetComponent<WheelVehicle>();
+        wheel = GetComponentInChildren<WheelCollider>();
     }
 
     #endregion
@@ -196,7 +198,8 @@ public class CarMovement : MonoBehaviour
     {
         Velocity = 0;
         Rotation = Quaternion.AngleAxis(0, new Vector3(0, 0, 1));
-        car.enabled = false; 
+        car.enabled = false;
+        wheel.enabled = false;
     }
 
     #endregion

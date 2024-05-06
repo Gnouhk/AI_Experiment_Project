@@ -12,10 +12,10 @@ public class GenericAlgorithm
     public const float DefInitParamMax = 1.0f;
 
     // Default probability of a parameter being swapped during crossover.
-    public const float DefCrossSwapProp = 0.6f;
+    public const float DefCrossSwapProb = 0.6f;
 
     // Default probability of a parameter being mutated.
-    public const float DefMutationProp = 0.3f;
+    public const float DefMutationProb = 0.3f;
 
     // Default amount by which parameters may be mutated.
     public const float DefMutationAmount = 2.0f;
@@ -53,7 +53,7 @@ public class GenericAlgorithm
     #region Operator Methods
 
     // Method used to initalise the initial population.
-    public InitialisationOperator InitialisePopulation = DefaultPopulationInitalisation;
+    public InitialisationOperator InitialisePopulation = DefaultPopulationInitialisation;
 
     // Method used to evaluate the current population
     public EvaluationOperator Evaluation = AsyncEvaluation;
@@ -177,7 +177,7 @@ public class GenericAlgorithm
     }
 
     // Init the population by setting each parameter to a random value in the default range
-    public static void DefaultPopulationInitalisation(IEnumerable<Genotype> population)
+    public static void DefaultPopulationInitialisation(IEnumerable<Genotype> population)
     {
         // Set parameters to random values in set range
         foreach (Genotype genotype in population)
@@ -236,7 +236,7 @@ public class GenericAlgorithm
         while (newPopulation.Count < newPopulationSize)
         {
             Genotype offspring1, offspring2;
-            CompleteCrossover(intermediatePopulation[0], intermediatePopulation[1], DefCrossSwapProp, out offspring1, out offspring2);
+            CompleteCrossover(intermediatePopulation[0], intermediatePopulation[1], DefCrossSwapProb, out offspring1, out offspring2);
 
             newPopulation.Add(offspring1);
             if (newPopulation.Count < newPopulationSize)
@@ -255,7 +255,7 @@ public class GenericAlgorithm
         {
             if (randomizer.NextDouble() < DefMutationPerc)
             {
-                MutateGenotype(genotype, DefMutationProp, DefMutationAmount);
+                MutateGenotype(genotype, DefMutationProb, DefMutationAmount);
             }
         }
     }
@@ -272,8 +272,8 @@ public class GenericAlgorithm
             if (randomizer.Next() < swapChance)
             {
                 // Swap parameters
-                 off1Parameters[i] = parent2[i];
-                 off2Parameters[i] = parent1[i];
+                off1Parameters[i] = parent2[i];
+                off2Parameters[i] = parent1[i];
             }
             else
             {
@@ -287,11 +287,11 @@ public class GenericAlgorithm
         offspring2 = new Genotype(off2Parameters);
     }
 
-    public static void MutateGenotype(Genotype genotype, float mutationProp, float mutationAmount)
+    public static void MutateGenotype(Genotype genotype, float mutationProb, float mutationAmount)
     {
         for (int i = 0; i < genotype.ParameterCount; i++)
         {
-            if (randomizer.NextDouble() < mutationProp)
+            if (randomizer.NextDouble() < mutationProb)
             {
                 // Mutate by random amount in range [-mutationAmount, mutationAmount]
                 genotype[i] += (float)(randomizer.NextDouble() * (mutationAmount * 2) - mutationAmount);
