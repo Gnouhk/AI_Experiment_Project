@@ -380,7 +380,7 @@ MonoBehaviour:
   PopulationSize: 30
   RestartAfter: 0
   ElitistSelection: 1
-  FNNTopology: 0500000006000000040000000300000002000000
+  FNNTopology: 050000000600000008000000060000000400000002000000
 --- !u!4 &1327938894
 Transform:
   m_ObjectHideFlags: 0
