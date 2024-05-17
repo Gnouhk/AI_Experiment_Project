@@ -275,7 +275,7 @@ public class EvolutionManager : MonoBehaviour
     {
         if(intermediatePopulation.Count < 2)
         {
-            throw new ArgumentException("The intermediate population has to be at least of size 2 for this operator.");
+            throw new System.ArgumentException("The intermediate population has to be at least of size 2 for this operator.");
         }
 
         List<Genotype> newPopulation = new List<Genotype>();

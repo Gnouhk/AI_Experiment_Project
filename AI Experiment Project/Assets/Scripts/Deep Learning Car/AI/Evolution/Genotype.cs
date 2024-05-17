@@ -150,6 +150,7 @@ public class Genotype : IComparable<Genotype>, IEnumerable<float>
             {
                 throw new ArgumentException("The file at given file path does not contain a valid genotype serialisation.");
             }
+            parameters.Add(parsed);
 
         }
         return new Genotype(parameters.ToArray());
