@@ -8,6 +8,8 @@ public class GameStateManager : MonoBehaviour
     [SerializeField]
     public string TrackName;
 
+    public UIController UIController { get; set; }
+
     public static GameStateManager Instance { get; private set; }
 
     private CarController prevBest, prevSecondBest;
@@ -26,18 +28,30 @@ public class GameStateManager : MonoBehaviour
 
         Instance = this;
 
+        // Load GUI
+        SceneManager.LoadScene("GUI", LoadSceneMode.Additive);
+
         // Load track
         SceneManager.LoadScene(TrackName, LoadSceneMode.Additive);
     }
 
     private void Start()
     {
+        TrackManager.Instance.BestCarChanged += OnBestCarChanged;
         EvolutionManager.Instance.StartEvolution();
     }
 
     #endregion
 
     #region Methods
+
+    private void OnBestCarChanged(CarController bestCar)
+    {
+        if(UIController != null)
+        {
+            UIController.SetDisplayTarget(bestCar);
+        }
+    }
 
     #endregion
 }

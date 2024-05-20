@@ -128,7 +128,6 @@ public class CarController : MonoBehaviour
 
     public void CheckpointCaptured()
     {
-        UnityEngine.Debug.Log("Checkpoint captured");
         timeSinceLastCheckpoint = 0;
     }
 
