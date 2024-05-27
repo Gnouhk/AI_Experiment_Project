@@ -20,11 +20,18 @@ public class UISimulationController : MonoBehaviour
     }
 
     [SerializeField]
-    private TextMeshProUGUI[] InputTexts;
+    private TMP_Text[] InputTexts;
     [SerializeField]
-    private TextMeshProUGUI Evaluation;
+    private TMP_Text Evaluation;
     [SerializeField]
-    private TextMeshProUGUI GenerationCount;
+    private TMP_Text GenerationCount;
+
+    private void Awake()
+    {
+        InputTexts = GetComponentsInChildren<TMP_Text>();
+        Evaluation = GetComponent<TMP_Text>();
+        GenerationCount = GetComponent<TMP_Text>();
+    }
 
     private void Update()
     {
