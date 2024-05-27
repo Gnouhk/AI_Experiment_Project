@@ -375,8 +375,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bff3567f34d3643ac0d4802822bdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveStatistics: 0
-  SaveFirstNGenotype: 5
+  SaveStatistics: 1
+  SaveFirstNGenotype: 10
   PopulationSize: 50
   RestartAfter: 0
   ElitistSelection: 1

@@ -125,10 +125,10 @@ public class EvolutionManager : MonoBehaviour
     // Writes the starting line to the statistics file.
     private void WriteStatisticsFileStart()
     {
-        File.WriteAllText(statisticsFileName + ".txt", "Evaluation of a Population with size " + PopulationSize +
+        File.WriteAllText(statisticsFileName + ".txt", "Evaluation of a Population with size " + PopulationSize + 
                 ", on Track \"" + GameStateManager.Instance.TrackName + "\", using the following GA operators: " + Environment.NewLine +
                 "Selection: " + geneticAlgorithm.Selection.Method.Name + Environment.NewLine +
-                "Recombination: " + geneticAlgorithm.Recombination.Method.Name + Environment.NewLine +
+                "Recombination: " + geneticAlgorithm.Recombination.Method.Name + Environment.NewLine + 
                 "Mutation: " + geneticAlgorithm.Mutation.Method.Name + Environment.NewLine +
                 "FitnessCalculation: " + geneticAlgorithm.FitnessCalculationMethod.Method.Name + Environment.NewLine + Environment.NewLine);
     }
