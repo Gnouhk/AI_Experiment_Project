@@ -2,13 +2,17 @@
  * This code is part of Arcade Car Physics for Unity by Saarg (2018)
  * 
  * This is distributed under the MIT Licence (see LICENSE.md for details)
+ * 
+ * Modified by Vuong Anh (03/06/2024)
  */
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace VehicleBehaviour.Utils {
-	public class CameraFollow : MonoBehaviour {
+namespace VehicleBehaviour.Utils 
+{
+	public class CameraFollow : MonoBehaviour 
+	{
 		// Should the camera follow the target
 		[SerializeField] bool follow = false;
 		public bool Follow
@@ -31,9 +35,6 @@ namespace VehicleBehaviour.Utils {
 		[SerializeField] float lerpPositionMultiplier = 1f;
 		[Range(0, 10)]		
 		[SerializeField] float lerpRotationMultiplier = 1f;
-
-		// Speedometer
-		[SerializeField] Text speedometer = null;
 
 		// We use a rigidbody to prevent the camera from going in walls but it means sometime it can get stuck
 		Rigidbody rb;
@@ -69,7 +70,9 @@ namespace VehicleBehaviour.Utils {
 			}
 		}
 
-		void FixedUpdate() {
+		void FixedUpdate() 
+		{
+
 			// If we don't follow or target is null return
 			if (!follow || target == null) return;
 
@@ -97,5 +100,5 @@ namespace VehicleBehaviour.Utils {
 				transform.position = new Vector3(transform.position.x , 0.5f, transform.position.z);
 			}
 		}
-	}
+    }
 }

@@ -375,10 +375,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bff3567f34d3643ac0d4802822bdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveStatistics: 1
-  SaveFirstNGenotype: 10
-  PopulationSize: 50
-  RestartAfter: 0
+  SaveStatistics: 0
+  SaveFirstNGenotype: 5
+  PopulationSize: 100
+  RestartAfter: 100
   ElitistSelection: 1
   FNNTopology: 05000000040000000300000002000000
 --- !u!4 &1327938894

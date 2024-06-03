@@ -5,6 +5,8 @@ using TMPro;
 
 public class UISimulationController : MonoBehaviour
 {
+    public static UISimulationController Instance { get; private set; }
+
     private CarController target;
 
     public CarController Target
@@ -28,12 +30,13 @@ public class UISimulationController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         InputTexts = GetComponentsInChildren<TMP_Text>();
         Evaluation = GetComponent<TMP_Text>();
         GenerationCount = GetComponent<TMP_Text>();
     }
 
-    private void Update()
+    public void UpdateUI()
     {
         if (target != null)
         {

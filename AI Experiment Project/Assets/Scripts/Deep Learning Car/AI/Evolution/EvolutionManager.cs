@@ -222,6 +222,9 @@ public class EvolutionManager : MonoBehaviour
 
 
         TrackManager.Instance.Restart();
+
+        // Update UI
+        UISimulationController.Instance.UpdateUI();
     }
 
     // When an agent died
